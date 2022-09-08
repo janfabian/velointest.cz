@@ -90,6 +90,13 @@ p {
   line-height: 25px;
 }
 
+.color-red {
+  color: var(--main-red) !important;
+}
+
+.bold {
+  font-weight: bold;
+}
 
 /*---------------------------------------
     1 Buttons               
@@ -116,7 +123,7 @@ p {
 
 .section-btn:focus,
 .section-btn:hover {
-  background: #000000;
+  background: var(--main-red);
   color: #ffffff;
 }
 
@@ -359,7 +366,7 @@ a:hover, a:active, a:focus {
   display: table;
   height: 100vh;
   position: relative;
-  padding: 280px 45px 0 65px;
+  padding: 35vh 45px 0 65px;
 }
 
 
@@ -480,16 +487,16 @@ a:hover, a:active, a:focus {
 }
 
 #work .work-overlay {
-  -webkit-transition: all ease-in-out 0.4s;
-  transition: all ease-in-out 0.4s;
+  /* -webkit-transition: all ease-in-out 0.4s;
+  transition: all ease-in-out 0.4s; */
   position: absolute;
   bottom: -45px;
   left: 40px;
 }
-
+/* 
 #work .col-md-4:hover .work-overlay {
   bottom: 25px;
-}
+} */
 
 
 
