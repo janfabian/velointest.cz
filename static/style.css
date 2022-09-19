@@ -51,7 +51,7 @@ html, body {
 
 
 /*---------------------------------------
-    0 Typorgraphy              
+    0 Typography              
 -----------------------------------------*/
 
 h1,h2,h3,h4,h5,h6 {
@@ -329,6 +329,19 @@ a:hover, a:active, a:focus {
 }
 
 
+.caption>span {
+  position: absolute;
+  bottom: 0;
+  padding: 5px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.caption>span>a {
+  color: rgba(255,255,255,0.7);
+}
+
+
 
 /*---------------------------------------
     5 Home section              
@@ -345,23 +358,11 @@ a:hover, a:active, a:focus {
 }
 
 #home .home-img {
-  background: url('../static/bike-home.jpg') no-repeat;
+  background: url('../static/bike-home-r.jpg') no-repeat;
   background-size: cover;
   background-position: 50% 50%;
   width: 100%;
   height: 100vh;
-}
-
-#home .home-img>span {
-  position: absolute;
-  bottom: 0;
-  padding: 5px;
-  font-size: 10px;
-  font-weight: 700;
-}
-
-#home .home-img>span>a {
-  color: rgba(255,255,255,0.7);
 }
 
 #home .home-text {
@@ -394,8 +395,9 @@ a:hover, a:active, a:focus {
 
 #service .service-thumb {
   background: #ffffff;
-  padding: 62px 22px;
-  text-align: center;
+  padding: 62px 22px 82px;
+  text-align: left;
+  height: 100%;
 }
 
 .service-thumb small {
@@ -403,14 +405,22 @@ a:hover, a:active, a:focus {
   font-size: 17px;
   font-style: italic;
   display: block;
-  padding: 6px 12px;
+  padding: 6px 6px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+
+  #service .panels {
+    display: flex;
+  }
 }
 
 .service-thumb small:nth-of-type(even) {
   background: #f9f9f9;
   border-radius: 5px;
   display: inline-block;
-  padding: 4px 12px;
+  padding: 4px 6px;
 }
 
 .service-thumb>.fa {
@@ -420,6 +430,25 @@ a:hover, a:active, a:focus {
 }
 
 
+
+.price {
+  color: var(--main-red);
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 20px;
+  background: #f9f9f9;
+  position: absolute;
+  bottom: 20px;
+}
+
+@media (max-width: 768px) {
+
+  .price {
+    top: 0;
+    right: 30px;
+    bottom: auto;
+  }
+}
 
 /*---------------------------------------
     7 About section              
@@ -463,13 +492,14 @@ a:hover, a:active, a:focus {
     8 Work section              
 -----------------------------------------*/
 
-.about-image img,
 .work-thumb img {
+  object-fit: cover;
   width: 100%;
+  height: 200px;
 }
 
 .work-thumb {
-  margin: 15px 5px 5px 5px;
+  margin: 15px 0;
   overflow: hidden;
   position: relative;
   top: 0;
@@ -480,7 +510,7 @@ a:hover, a:active, a:focus {
 .work-thumb:hover {
   background: #ffffff;
   box-shadow: 0px 16px 22px 0px rgba(90, 91, 95, 0.3);
-  top: -5px;
+  /* top: -5px; */
 }
 
 .work-overlay h4,
@@ -491,9 +521,9 @@ a:hover, a:active, a:focus {
 #work .work-overlay {
   /* -webkit-transition: all ease-in-out 0.4s;
   transition: all ease-in-out 0.4s; */
-  position: absolute;
+  /* position: absolute;
   bottom: -45px;
-  left: 40px;
+  left: 40px; */
 }
 /* 
 #work .col-md-4:hover .work-overlay {
@@ -566,11 +596,15 @@ a:hover, a:active, a:focus {
 }
 
 #client ul li {
-  display: inline-block;
   list-style: none;
-  vertical-align: top;
-  width: 14%;
-  margin: 0 12px;
+}
+
+#client ul {
+  display: flex;
+  column-gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 #client ul li.small-width {
@@ -691,10 +725,10 @@ footer {
 
 @media (max-width: 980px) {
 
-  #home .home-img,
+  /* #home .home-img,
   #home .home-text {
     height: 50vh;
-  }
+  } */
 
   #service .service-thumb {
     padding-bottom: 22px;
@@ -711,7 +745,7 @@ footer {
   }
 
   #client ul li {
-    width: 20%;
+    /* width: 20%; */
     margin: 0;
   }
 
@@ -780,7 +814,7 @@ footer {
   }
 
   #work .col-md-4 {
-    margin-bottom: 75px;
+    margin-bottom: 45px;
   }
 
   #about .about-image {padding-top: 32px;}
@@ -811,7 +845,7 @@ footer {
   }
 
   #work .col-md-4 {
-    margin-bottom: 75px;
+    margin-bottom: 45px;
   }
 
   #client .container {
@@ -820,8 +854,10 @@ footer {
   }
 
   #client ul li {
-    width: 40%;
+    width: 100%;
     margin-bottom: 22px;
+    justify-content: center;
+    padding: 0;
   }
 
   #client ul li.small-width {
