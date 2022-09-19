@@ -7,8 +7,8 @@
 
      <meta http-equiv="X-UA-Compatible" content="IE=Edge">
      <meta name="description" content="Tradiční pražský cykloservis">
-     <meta name="keywords" content="cykloservis, oprava kol, prodej cyklodílů">
-     <meta name="author" content="velointest">
+     <meta name="keywords" content="cykloservis, oprava kol, prodej cyklodílů, servis jízdních kol">
+     <meta name="author" content="velointest.cz">
      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
      <title>velointest - tradiční pražský cykloservis</title>
@@ -23,6 +23,23 @@
 
      <!-- Main css -->
      <link rel="stylesheet" href="./static/style.css">
+     <script src="https://www.google.com/recaptcha/api.js?render=6LdRxQ8iAAAAAAUoDqQVsFmhEw8pwAbzX7ERkDsc"></script>
+      <script>
+          grecaptcha.ready(function () {
+              grecaptcha.execute('6LdRxQ8iAAAAAAUoDqQVsFmhEw8pwAbzX7ERkDsc', {action: 'submit'}).then(function (token) {
+                  console.info("got token: " + token);
+                  document.getElementById('g-recaptcha-response').value = token;
+              });
+          });
+      </script>
+
+<link rel="apple-touch-icon" sizes="120x120" href="./static/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./static/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./static/favicon-16x16.png">
+<link rel="manifest" href="./static/site.webmanifest">
+<link rel="mask-icon" href="./static/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
 </head>
 
 <body data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
@@ -442,8 +459,10 @@
 
                     <div class="col-md-offset-2 col-md-8 col-sm-12">
                          <!-- CONTACT FORM HERE -->
-                         <form id="contact-form" role="form">
+                         <form id="contact-form" role="form" action="https://formspree.io/f/meqdanod" method="POST">
 
+                              <p id="my-form-status"></p>
+                              <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
                               <!-- IF MAIL SENT SUCCESSFULLY -->
                               <h6 class="text-success">Vaše zpráva je úspěšně poslaná. </h6>
 
@@ -451,19 +470,19 @@
                               <h6 class="text-danger">E-mail musí být validní a zpráva vyplněna</h6>
 
                               <div class="col-md-6 col-sm-6">
-                                   <input type="text" class="form-control" id="cf-name" name="cf-name"
-                                        placeholder="Jméno">
+                                   <input type="text" class="form-control" id="jmeno" name="jmeno"
+                                        placeholder="Jméno" required>
                               </div>
 
                               <div class="col-md-6 col-sm-6">
-                                   <input type="email" class="form-control" id="cf-email" name="email"
-                                        placeholder="Email">
+                                   <input type="email" class="form-control" id="email" name="email"
+                                        placeholder="Email" required>
                               </div>
 
                               <div class="col-md-12 col-sm-12">
 
-                                   <textarea class="form-control" rows="5" id="cf-message" name="cf-message"
-                                        placeholder="Zpráva"></textarea>
+                                   <textarea class="form-control" rows="5" id="zprava" name="zprava"
+                                        placeholder="Zpráva" required></textarea>
                               </div>
 
                               <div class="col-md-offset-4 col-md-4 col-sm-offset-4 col-sm-4">
