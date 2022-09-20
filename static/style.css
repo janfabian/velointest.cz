@@ -486,6 +486,10 @@ a:hover, a:active, a:focus {
   box-shadow: none;
 }
 
+video {
+  max-width: 100%;
+}
+
 
 
 /*---------------------------------------
