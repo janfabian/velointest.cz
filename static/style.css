@@ -870,3 +870,6 @@ footer {
 
 }
 
+.grecaptcha-badge {
+  display: none !important;
+}
