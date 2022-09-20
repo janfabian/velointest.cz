@@ -7,6 +7,10 @@
           $('.preloader').fadeOut(1000); // set duration in brackets    
         });
 
+        const email = "velointest"
+        const domain = "velointest.cz"
+
+        $("a.email").text(`${email}@${domain}`).attr("href", `mailto:${email}@${domain}`)
 
         //Navigation Section
         $('.navbar-collapse a').on('click',function(){
@@ -42,12 +46,12 @@
             if (Object.hasOwn(data, 'errors')) {
               status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
             } else {
-              status.innerHTML = "Omlouváme se, nastal problém při odesílání vaší zprávy. Napište prosím na velointest@velointest.cz nebo zavolejte na 777 271 896."
+              status.innerHTML = "Omlouváme se, nastal problém při odesílání vaší zprávy. Napište prosím na " + `${email}@${domain}` + " nebo zavolejte na 777 271 896."
             }
           })
         }
       }).catch(error => {
-        status.innerHTML = "Omlouváme se, nastal problém při odesílání vaší zprávy. Napište prosím na velointest@velointest.cz nebo zavolejte na 777 271 896."
+        status.innerHTML = "Omlouváme se, nastal problém při odesílání vaší zprávy. Napište prosím na " + `${email}@${domain}` + " nebo zavolejte na 777 271 896."
       });
     }
     form.addEventListener("submit", handleSubmit)
