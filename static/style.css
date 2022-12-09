@@ -269,7 +269,7 @@ a:hover, a:active, a:focus {
   font-size: 14px;
   color: #656565;
   line-height: 40px;
-  padding: 5px 22px;
+  padding: 5px 15px;
   -webkit-transition: all ease-in-out 0.4s;
   transition: all ease-in-out 0.4s;
 }
@@ -301,6 +301,13 @@ a:hover, a:active, a:focus {
 .custom-navbar .navbar-toggle .icon-bar {
   background: #353535;
   border-color: transparent;
+}
+
+.custom-navbar .fa-facebook {
+    background: #3b5998;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
 }
 
 @media(max-width:768px) {
