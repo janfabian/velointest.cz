@@ -252,6 +252,32 @@ a:hover, a:active, a:focus {
   padding-top: 15px;
 }
 
+.sale a {
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .sale {
+    background: red;
+    padding: 10px;
+    float: left;
+    margin-top: 5px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .sale {
+    position: absolute;
+    left: 0;
+    background: red;
+    top: 50px;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+  }
+}
+
 .custom-navbar .navbar-brand {
   color: #656565;
   font-size: 20px;
