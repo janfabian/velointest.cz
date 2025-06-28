@@ -530,6 +530,26 @@ video {
     8 Work section              
 -----------------------------------------*/
 
+.mb-30 {
+  margin-bottom: 30px !important;
+}
+
+.bike-thumb img {
+  width: 100%;
+  height: 300px !important;
+  object-fit: cover;
+  -webkit-transition: all ease-in-out 0.4s;
+  transition: all ease-in-out 0.4s;
+}
+
+.bike-thumb img:hover {
+  height: 600px !important;
+}
+
+.bike-thumb:hover {
+  box-shadow: none !important;
+}
+
 .work-thumb img {
   object-fit: cover;
   width: 100%;
@@ -567,7 +587,6 @@ video {
 #work .col-md-4:hover .work-overlay {
   bottom: 25px;
 } */
-
 
 
 /*---------------------------------------
