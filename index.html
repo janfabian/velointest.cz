@@ -63,10 +63,9 @@
 
      </div>
 
-     <!--<div class="fixed-top-banner">
-          <span><i class="fa fa-bicycle"></i> Máme zavřeno 28.7. - 8.8. <i class="fa fa-bicycle"></i></br>
-               Zpět jsme od pondělí 11.8. Těšíme se na vás!</span>
-     </div> -->
+     <div class="fixed-top-banner" id="bannerReopen" style="cursor: pointer;">
+          <span>🎄 Kupte vánoční dárkový poukaz! 🎁 Perfektní dárek pro každého cyklistu. ☎️ 777 271 896</span>
+     </div>
 
      <!-- Navigation Section -->
      <div class="navbar custom-navbar navbar-fixed-top" role="navigation">
@@ -636,6 +635,79 @@
                </div>
           </div>
      </footer>
+
+     <!-- Image Popup Modal -->
+     <div id="imageModal" class="image-modal">
+          <div class="modal-backdrop"></div>
+          <div class="modal-content-wrapper">
+               <div class="modal-text-overlay">
+                         <h2>🎄 Vánoční dárek pro cyklisty! 🎁</h2>
+                         <p>Potěšte své blízké dárkovým poukazem na cykloservis.</p>
+                         <p class="highlight">Ideální vánoční dárek pro každého, kdo jezdí na kole!</p>
+                         <div class="contact-info">
+                              <p><strong>📞 Zavolejte:</strong> <a href="tel:777271896">777 271 896</a></p>
+                              <p><strong>🏪 Nebo se zastavte v prodejně</strong></p>
+                              <p class="address">📍 Na Výspě 12, Praha 4</p>
+                         </div>
+                         <p class="closing">Těšíme se na vás!</p>
+                    </div>
+               <button class="modal-close" aria-label="Close modal"><span>&times;</span></button>
+               <div class="modal-image-container">
+                    <img src="./static/kupon-2025.jpeg" alt="Kupon 2025" class="modal-image">
+                    
+               </div>
+          </div>
+     </div>
+
+     <script>
+          // Image modal functionality
+          (function() {
+               const modal = document.getElementById('imageModal');
+               const closeBtn = document.querySelector('.modal-close');
+               const contentWrapper = document.querySelector('.modal-content-wrapper');
+               const banner = document.getElementById('bannerReopen');
+
+               // Show modal on page load
+               window.addEventListener('load', function() {
+                    setTimeout(function() {
+                         modal.classList.add('show');
+                    }, 200); // Small delay for better UX
+               });
+
+               // Open modal function
+               function openModal() {
+                    modal.classList.add('show');
+               }
+
+               // Close modal function
+               function closeModal() {
+                    modal.classList.remove('show');
+               }
+
+               // Close on button click
+               closeBtn.addEventListener('click', closeModal);
+
+               // Reopen modal on banner click
+               if (banner) {
+                    banner.addEventListener('click', openModal);
+               }
+
+               // Close when clicking outside the image (on the wrapper itself)
+               contentWrapper.addEventListener('click', function(e) {
+                    // Only close if the click target is the wrapper itself, not its children
+                    if (e.target === contentWrapper) {
+                         closeModal();
+                    }
+               });
+
+               // Close on ESC key press
+               document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && modal.classList.contains('show')) {
+                         closeModal();
+                    }
+               });
+          })();
+     </script>
 
      <!-- SCRIPTS -->
      <script src="./static/jquery.js"></script>
