@@ -194,6 +194,7 @@
   .lang-btn + .lang-btn{border-left:1px solid #3a424d}
   .lang-btn:hover{color:#fff;background:var(--slate-2)}
   .lang-btn.is-active{background:var(--steel);color:#fff}
+  .lang-switch--drawer{display:none}
 
   .nav-toggle{
     display:none;width:38px;height:38px;align-items:center;justify-content:center;
@@ -401,8 +402,9 @@
     .nav-toggle{display:inline-flex;width:34px;height:34px}
     .call{padding:8px 12px;font-size:12px}
     .theme-toggle{width:34px;height:34px}
-    .lang-switch{height:34px}
-    .lang-btn{padding:0 8px;min-width:28px;font-size:10px}
+    .lang-switch--header{display:none}
+    .lang-switch--drawer{display:inline-flex;margin:14px 30px 6px;height:36px}
+    .lang-switch--drawer .lang-btn{padding:0 14px;min-width:44px;font-size:11px}
     section{padding:64px 0}
   }
 </style>
@@ -417,8 +419,12 @@
       <a href="#testimonial" data-i18n="nav.reviews">Reference</a>
       <a href="#about" data-i18n="nav.about">O nás</a>
       <a href="#contact" data-i18n="nav.contact">Kontakt</a>
+      <div class="lang-switch lang-switch--drawer" role="group" aria-label="Language">
+        <button class="lang-btn is-active" data-lang="cs" type="button" aria-pressed="true">CS</button>
+        <button class="lang-btn" data-lang="en" type="button" aria-pressed="false">EN</button>
+      </div>
     </nav>
-    <div class="lang-switch" role="group" aria-label="Language">
+    <div class="lang-switch lang-switch--header" role="group" aria-label="Language">
       <button class="lang-btn is-active" data-lang="cs" type="button" aria-pressed="true">CS</button>
       <button class="lang-btn" data-lang="en" type="button" aria-pressed="false">EN</button>
     </div>
@@ -681,8 +687,8 @@
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       btn.setAttribute('aria-label', navLabel(open));
     });
-    nav.querySelectorAll('.links a').forEach(function(a){
-      a.addEventListener('click', close);
+    nav.querySelectorAll('.links a, .lang-switch--drawer .lang-btn').forEach(function(el){
+      el.addEventListener('click', close);
     });
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape') close();
