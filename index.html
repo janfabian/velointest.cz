@@ -374,14 +374,15 @@
     .form-row{grid-template-columns:1fr}
     .nav{gap:10px;height:64px;position:relative}
     .nav .links{
-      display:flex;flex-direction:column;gap:0;margin:0;
-      position:absolute;top:64px;left:-22px;right:-22px;
-      background:var(--ink);border-bottom:1px solid #2b323c;padding:6px 22px 16px;
-      transform:translateY(-110%);transition:transform .22s ease;
+      display:flex;flex-direction:column;gap:0;margin:0;padding:0;
+      position:absolute;top:100%;left:-22px;right:-22px;
+      background:var(--ink);
+      overflow:hidden;max-height:0;
+      transition:max-height .25s ease;
       pointer-events:none;z-index:40;
     }
-    .nav.is-open .links{transform:translateY(0);pointer-events:auto}
-    .nav .links a{padding:14px 0;border-bottom:1px solid #2b323c;font-size:13px}
+    .nav.is-open .links{max-height:60vh;pointer-events:auto}
+    .nav .links a{padding:14px 22px;border-bottom:1px solid #2b323c;font-size:13px}
     .nav .links a:last-child{border-bottom:0}
     .nav-toggle{display:inline-flex;width:34px;height:34px}
     .call{padding:8px 12px;font-size:12px}
