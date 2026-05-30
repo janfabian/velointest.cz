@@ -181,6 +181,21 @@
   [data-theme="dark"] .theme-toggle .icon-sun{display:block}
   [data-theme="dark"] .theme-toggle .icon-moon{display:none}
 
+  .nav-toggle{
+    display:none;width:38px;height:38px;align-items:center;justify-content:center;
+    border:1px solid #3a424d;color:#cfd4da;transition:.2s;flex-shrink:0;background:transparent;
+  }
+  .nav-toggle:hover{border-color:var(--steel);color:#fff;background:var(--slate-2)}
+  .nav-toggle .bars{position:relative;display:block;width:16px;height:1px;background:currentColor;transition:background .15s}
+  .nav-toggle .bars::before,.nav-toggle .bars::after{
+    content:"";position:absolute;left:0;width:16px;height:1px;background:currentColor;transition:transform .2s,top .2s
+  }
+  .nav-toggle .bars::before{top:-5px}
+  .nav-toggle .bars::after{top:5px}
+  .nav.is-open .nav-toggle .bars{background:transparent}
+  .nav.is-open .nav-toggle .bars::before{top:0;transform:rotate(45deg)}
+  .nav.is-open .nav-toggle .bars::after{top:0;transform:rotate(-45deg)}
+
   .hero{position:relative;background:var(--ink);color:#fff;overflow:hidden}
   .hero .grid-bg{position:absolute;inset:0}
   .hero-inner{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center;padding:78px 0 88px}
@@ -357,8 +372,18 @@
     .hero-figure img{height:300px}
     .bikes,.svcs,.pkgs,.refs{grid-template-columns:1fr}
     .form-row{grid-template-columns:1fr}
-    .nav{gap:14px;height:64px}
-    .nav .links{display:none}
+    .nav{gap:10px;height:64px;position:relative}
+    .nav .links{
+      display:flex;flex-direction:column;gap:0;margin:0;
+      position:absolute;top:64px;left:-22px;right:-22px;
+      background:var(--ink);border-bottom:1px solid #2b323c;padding:6px 22px 16px;
+      transform:translateY(-110%);transition:transform .22s ease;
+      pointer-events:none;z-index:40;
+    }
+    .nav.is-open .links{transform:translateY(0);pointer-events:auto}
+    .nav .links a{padding:14px 0;border-bottom:1px solid #2b323c;font-size:13px}
+    .nav .links a:last-child{border-bottom:0}
+    .nav-toggle{display:inline-flex;width:34px;height:34px}
     .call{padding:8px 12px;font-size:12px}
     .theme-toggle{width:34px;height:34px}
     section{padding:64px 0}
@@ -370,7 +395,7 @@
 <header>
   <div class="wrap nav">
     <a class="brand" href="#home"><img src="./static/velointest-logo.png" alt="Velointest — cykloservis Praha" width="140" height="34"></a>
-    <nav class="links">
+    <nav class="links" id="nav-links">
       <a href="#work">Cykloslužby</a>
       <a href="#testimonial">Reference</a>
       <a href="#about">O nás</a>
@@ -381,6 +406,7 @@
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
     </button>
     <a class="call" href="tel:777271896" onclick="gtag('event','call_click',{'position':'menu'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'});"><span class="dot"></span>777 271 896</a>
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Otevřít menu" aria-expanded="false" aria-controls="nav-links"><span class="bars" aria-hidden="true"></span></button>
   </div>
 </header>
 
@@ -590,7 +616,7 @@
       </div>
       <div>
         <div class="info-block">
-          <div class="row"><span class="k">Adresa</span><span class="v">Na Výspě 12, 147 00 Praha 4</span></div>
+          <div class="row"><span class="k">Adresa</span><span class="v"><a href="https://www.google.com/maps/place/Velointest/@50.0235373,14.4171806,17z/data=!3m1!4b1!4m5!3m4!1s0x0:0xb9853d8c478b52fe!8m2!3d50.0235065!4d14.4171829" target="_blank" rel="noopener">Na Výspě 12, 147 00 Praha 4</a></span></div>
           <div class="row"><span class="k">Telefon</span><span class="v"><a href="tel:777271896" onclick="gtag('event','call_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a></span></div>
           <div class="row"><span class="k">E-mail</span><span class="v"><a class="email" onclick="gtag('event','email_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"></a></span></div>
           <div class="row"><span class="k">Po–Čt</span><span class="v">10:00 – 18:00</span></div>
@@ -613,6 +639,34 @@
 </footer>
 
 <script>
+  // Mobile hamburger menu
+  (function(){
+    var nav = document.querySelector('header .nav');
+    var btn = document.getElementById('nav-toggle');
+    if(!nav || !btn) return;
+    function close(){
+      if(!nav.classList.contains('is-open')) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Otevřít menu');
+    }
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var open = nav.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Zavřít menu' : 'Otevřít menu');
+    });
+    nav.querySelectorAll('.links a').forEach(function(a){
+      a.addEventListener('click', close);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') close();
+    });
+    document.addEventListener('click', function(e){
+      if(!nav.contains(e.target)) close();
+    });
+  })();
+
   // Theme toggle (system preference by default, user choice persists)
   (function(){
     var btn = document.getElementById('theme-toggle');
