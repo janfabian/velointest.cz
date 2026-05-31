@@ -348,7 +348,7 @@
 
   /* generic "see more elsewhere" link under section grids (Reviews, FB, …) */
   .sec-more{margin-top:36px;text-align:center}
-  .sec-more a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);padding:12px 22px;border:1px solid var(--line);display:inline-block;transition:.2s}
+  .sec-more a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);padding:12px 22px;border:1px solid var(--line);display:inline-block;transition:.2s;white-space:nowrap}
   .sec-more a:hover{border-color:var(--steel);background:var(--paper-2);color:var(--ink)}
 
   .partners{padding:64px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -435,6 +435,7 @@
     .fb-post.is-hero .bd{padding:20px 22px 22px}
     .fb-post.is-mini{flex:0 0 auto}
     .fb-post.is-mini .ph{aspect-ratio:16/10}
+    .sec-more a{padding:10px 14px;font-size:11px;letter-spacing:.08em}
     .form-row{grid-template-columns:1fr}
     .nav{gap:10px;height:64px;position:relative}
     .nav .links{
@@ -663,7 +664,7 @@
     <div class="sec-head"><span class="no">05</span><h2 data-i18n="fb.head">Z&nbsp;Facebooku</h2><span class="rule"></span><span class="tag" data-i18n="fb.tag">Co se u nás děje</span></div>
     <div class="fb-posts" id="fb-posts-grid"></div>
     <p class="fb-empty" id="fb-empty" hidden data-i18n="fb.empty">Žádné příspěvky nejsou k zobrazení.</p>
-    <div class="sec-more"><a href="https://www.facebook.com/velointest" target="_blank" rel="noopener" data-i18n="fb.follow">Sledujte naše aktuality na Facebooku →</a></div>
+    <div class="sec-more"><a href="https://www.facebook.com/velointest" target="_blank" rel="noopener" data-i18n="fb.follow">Sledujte nás na Facebooku →</a></div>
   </div>
 </section>
 
@@ -858,7 +859,7 @@
       'fb.head': 'From&nbsp;Facebook',
       'fb.tag': "What's new",
       'fb.empty': 'No posts to display.',
-      'fb.follow': 'Follow our latest news on Facebook →',
+      'fb.follow': 'Follow us on Facebook →',
       // partners
       'partners.lbl': 'We work with the best',
       // contact
