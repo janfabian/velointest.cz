@@ -174,7 +174,8 @@
   .nav .links a:hover{color:#fff;border-color:var(--steel)}
   .call{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:13px;color:#fff;border:1px solid #3a424d;padding:9px 14px;transition:.2s}
   .call:hover{border-color:var(--steel);background:var(--slate-2)}
-  .call .dot{width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 0 3px rgba(215,50,43,.25)}
+  .call .dot{width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 0 3px rgba(215,50,43,.25);transition:.2s}
+  .call.is-open .dot{background:#3aaa5e;box-shadow:0 0 0 3px rgba(58,170,94,.28)}
   .theme-toggle{
     width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;
     border:1px solid #3a424d;color:#cfd4da;transition:.2s;flex-shrink:0;
@@ -825,10 +826,17 @@
     var oh = lang === 'en'
       ? { closed: "We're closed today", weekday: 'Open today 10:00 – 18:00', friday: 'Open today 10:00 – 16:00' }
       : { closed: 'Dnes máme zavřeno', weekday: 'Dnes máme otevřeno 10:00 – 18:00', friday: 'Dnes máme otevřeno 10:00 – 16:00' };
-    var d = new Date().getDay();
+    var now = new Date();
+    var d = now.getDay();
     var text = (d === 0 || d === 6) ? oh.closed : (d === 5 ? oh.friday : oh.weekday);
     var el = document.getElementById('opening');
     if(el) el.textContent = text;
+    // Live open-state for the phone-button dot (green when shop is open, red when closed)
+    var minutes = now.getHours() * 60 + now.getMinutes();
+    var isOpen = (d >= 1 && d <= 5) && minutes >= 600 && minutes < (d === 5 ? 960 : 1080);
+    document.querySelectorAll('.call').forEach(function(c){
+      c.classList.toggle('is-open', isOpen);
+    });
   }
 
   // Cache original Czech innerHTML/placeholders on first run so toggling back works
