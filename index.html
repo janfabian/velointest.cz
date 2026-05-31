@@ -346,6 +346,11 @@
 
   .fb-empty{font-family:var(--mono);font-size:13px;color:var(--muted);text-align:center;padding:24px 0}
 
+  /* generic "see more elsewhere" link under section grids (Reviews, FB, …) */
+  .sec-more{margin-top:36px;text-align:center}
+  .sec-more a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);padding:12px 22px;border:1px solid var(--line);display:inline-block;transition:.2s}
+  .sec-more a:hover{border-color:var(--steel);background:var(--paper-2);color:var(--ink)}
+
   .partners{padding:64px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .partners .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:30px}
   .plogos{display:flex;align-items:center;justify-content:center;gap:54px;flex-wrap:wrap}
@@ -412,6 +417,8 @@
   [data-theme="dark"] .fb-post .ph{background:#13161B}
   [data-theme="dark"] .fb-post .more{border-top-color:#2f3640}
   [data-theme="dark"] .fb-post .more:hover{color:#fff}
+  [data-theme="dark"] .sec-more a{border-color:#2f3640}
+  [data-theme="dark"] .sec-more a:hover{border-color:var(--steel);background:var(--slate-2);color:#fff}
   [data-theme="dark"] .partners{border-top-color:#2f3640;border-bottom-color:#2f3640}
   [data-theme="dark"] .partners .lbl{color:#8b929b}
   [data-theme="dark"] .plogos img{filter:grayscale(1) invert(.85) opacity(.7)}
@@ -646,6 +653,7 @@
         <div class="who"><b>Vojtěch Mařík</b> · Google</div>
       </article>
     </div>
+    <div class="sec-more"><a href="https://www.google.com/maps/place/Velointest/@50.0235373,14.4171806,17z/data=!3m1!4b1!4m5!3m4!1s0x0:0xb9853d8c478b52fe!8m2!3d50.0235065!4d14.4171829" target="_blank" rel="noopener" data-i18n="ref.more">Více recenzí na Google Maps →</a></div>
   </div>
 </section>
 
@@ -655,6 +663,7 @@
     <div class="sec-head"><span class="no">05</span><h2 data-i18n="fb.head">Z&nbsp;Facebooku</h2><span class="rule"></span><span class="tag" data-i18n="fb.tag">Co se u nás děje</span></div>
     <div class="fb-posts" id="fb-posts-grid"></div>
     <p class="fb-empty" id="fb-empty" hidden data-i18n="fb.empty">Žádné příspěvky nejsou k zobrazení.</p>
+    <div class="sec-more"><a href="https://www.facebook.com/velointest" target="_blank" rel="noopener" data-i18n="fb.follow">Sledujte naše aktuality na Facebooku →</a></div>
   </div>
 </section>
 
@@ -844,10 +853,12 @@
       'ref.1.body': '"A decent guy, pleasant small shop — none of the big-box service where you\'re just another number in the queue. Quick repair on the spot, an hour and a half before opening time."',
       'ref.2.body': "\"Great service and attitude. Third bike I've had serviced here and I've always been very satisfied.\"",
       'ref.3.body': '"Excellent bike service with no competition in the area. The right guy in the right place — exactly as it should be. Pricing and turnaround time both very fair."',
+      'ref.more': 'More reviews on Google Maps →',
       // facebook posts
       'fb.head': 'From&nbsp;Facebook',
       'fb.tag': "What's new",
       'fb.empty': 'No posts to display.',
+      'fb.follow': 'Follow our latest news on Facebook →',
       // partners
       'partners.lbl': 'We work with the best',
       // contact
