@@ -316,29 +316,31 @@
   .ref .who{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
   .ref .who b{color:var(--ink)}
 
-  /* asymmetric layout: 1 hero card on the left + 2 mini cards stacked on the right */
-  .fb-posts{display:grid;grid-template-columns:1.7fr 1fr;grid-auto-rows:1fr;gap:24px}
+  /* asymmetric layout: hero card on the left + a flex stack of 2 mini cards on the right */
+  .fb-posts{display:grid;grid-template-columns:1.7fr 1fr;gap:24px;align-items:stretch}
+  .fb-stack{display:flex;flex-direction:column;gap:24px;min-width:0}
   .fb-post{border:1px solid var(--line);background:#fff;overflow:hidden}
-  .fb-post .ph{overflow:hidden;background:var(--paper-2);display:block}
-  .fb-post .ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s;display:block}
-  .fb-post:hover .ph img{transform:scale(1.03)}
   .fb-post .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--steel);text-transform:uppercase}
   .fb-post .meta .badge{margin-left:8px;color:var(--signal)}
   .fb-post p{color:#3c4148;line-height:1.55;white-space:pre-wrap;margin:0}
-  .fb-post .more{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--steel);text-transform:uppercase;transition:.15s;display:inline-block}
+  .fb-post .more{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--steel);text-transform:uppercase;transition:.15s;display:inline-block;align-self:flex-start}
   .fb-post .more:hover{color:var(--ink)}
 
-  /* hero card — spans both rows on the left, photo on top, big caption beneath */
-  .fb-post.is-hero{grid-column:1;grid-row:1 / span 2;display:flex;flex-direction:column}
-  .fb-post.is-hero .ph{aspect-ratio:4/3}
+  /* hero card — photo on top, big caption beneath */
+  .fb-post.is-hero{display:flex;flex-direction:column}
+  .fb-post.is-hero .ph{display:block;aspect-ratio:4/3;overflow:hidden;background:var(--paper-2)}
+  .fb-post.is-hero .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+  .fb-post.is-hero:hover .ph img{transform:scale(1.03)}
   .fb-post.is-hero .bd{padding:26px 28px 28px;display:flex;flex-direction:column;gap:16px;flex:1}
   .fb-post.is-hero p{font-size:16px;flex:1}
-  .fb-post.is-hero .more{padding-top:12px;border-top:1px solid var(--line)}
+  .fb-post.is-hero .more{padding-top:12px;border-top:1px solid var(--line);align-self:stretch}
 
-  /* mini cards — compact feed entries, square thumb on the left, text on the right */
-  .fb-post.is-mini{display:grid;grid-template-columns:130px 1fr;align-items:stretch}
-  .fb-post.is-mini .ph{aspect-ratio:1/1;height:100%}
-  .fb-post.is-mini .bd{padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+  /* mini cards — feed entries, square thumb on the left, text on the right */
+  .fb-post.is-mini{display:flex;align-items:stretch;flex:1 1 0;min-height:0;min-width:0}
+  .fb-post.is-mini .ph{flex:0 0 130px;align-self:stretch;background:var(--paper-2);position:relative;overflow:hidden;display:block}
+  .fb-post.is-mini .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+  .fb-post.is-mini:hover .ph img{transform:scale(1.03)}
+  .fb-post.is-mini .bd{flex:1 1 auto;min-width:0;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
   .fb-post.is-mini p{font-size:13.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .fb-post.is-mini .more{margin-top:auto}
 
@@ -421,11 +423,10 @@
     .hero-inner,.about,.contact-grid{grid-template-columns:1fr;gap:36px}
     .hero-figure img{height:300px}
     .bikes,.svcs,.pkgs,.refs{grid-template-columns:1fr}
-    .fb-posts{grid-template-columns:1fr;grid-auto-rows:auto}
-    .fb-post.is-hero{grid-column:auto;grid-row:auto}
+    .fb-posts{grid-template-columns:1fr}
     .fb-post.is-hero .ph{aspect-ratio:16/10}
     .fb-post.is-hero .bd{padding:20px 22px 22px}
-    .fb-post.is-mini{grid-template-columns:110px 1fr}
+    .fb-post.is-mini .ph{flex-basis:110px}
     .form-row{grid-template-columns:1fr}
     .nav{gap:10px;height:64px;position:relative}
     .nav .links{
@@ -991,9 +992,8 @@
         lang === 'en' ? 'en-GB' : 'cs-CZ',
         { day: 'numeric', month: 'long', year: 'numeric' },
       );
-      grid.innerHTML = posts.slice(0, 3).map(function(p, idx){
-        var isHero = idx === 0;
-        var maxChars = isHero ? 420 : 130;
+      function card(p, isHero){
+        var maxChars = isHero ? 420 : 140;
         var d = p.createdAt ? new Date(p.createdAt) : null;
         var date = d && !isNaN(d.getTime()) ? fmt.format(d) : '';
         var raw = String(p.text || '');
@@ -1011,7 +1011,11 @@
           +   '<a class="more" href="' + escapeHtml(p.url) + '" target="_blank" rel="noopener">' + moreLabel + '</a>'
           + '</div>'
           + '</article>';
-      }).join('');
+      }
+      var slice = posts.slice(0, 3);
+      var hero = slice[0] ? card(slice[0], true) : '';
+      var minis = slice.slice(1).map(function(p){ return card(p, false); }).join('');
+      grid.innerHTML = hero + (minis ? '<div class="fb-stack">' + minis + '</div>' : '');
     }
     // Expose so applyLang can re-render without re-fetching.
     window.__renderFbPosts = function(lang){ render(lang); };
