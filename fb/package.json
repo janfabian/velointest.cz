@@ -1,0 +1,16 @@
+{
+  "name": "velointest-fb",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "publish": "bun run src/publish.ts",
+    "auth": "bun run scripts/auth.ts",
+    "check": "bun run src/publish.ts --check"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5"
+  },
+  "dependencies": {}
+}
