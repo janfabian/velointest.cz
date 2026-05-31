@@ -93,7 +93,7 @@
 </script>
 
 <script>
-  // Apply theme before paint to avoid flash
+  // Apply theme + language before paint to avoid flash
   (function(){
     try {
       var saved = localStorage.getItem('vi-theme');
@@ -103,6 +103,10 @@
     } catch(e){
       document.documentElement.setAttribute('data-theme', 'light');
     }
+    try {
+      var lang = localStorage.getItem('vi-lang');
+      if(lang === 'en') document.documentElement.lang = 'en';
+    } catch(e){}
   })();
 </script>
 
@@ -180,6 +184,17 @@
   .theme-toggle .icon-sun{display:none}
   [data-theme="dark"] .theme-toggle .icon-sun{display:block}
   [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+  .lang-switch{display:inline-flex;border:1px solid #3a424d;flex-shrink:0;height:38px}
+  .lang-btn{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:#AEB4BC;
+    padding:0 10px;background:transparent;border:0;cursor:pointer;transition:.15s;
+    display:inline-flex;align-items:center;justify-content:center;min-width:34px;
+  }
+  .lang-btn + .lang-btn{border-left:1px solid #3a424d}
+  .lang-btn:hover{color:#fff;background:var(--slate-2)}
+  .lang-btn.is-active{background:var(--steel);color:#fff}
+  .lang-switch--drawer{display:none}
 
   .nav-toggle{
     display:none;width:38px;height:38px;align-items:center;justify-content:center;
@@ -387,6 +402,9 @@
     .nav-toggle{display:inline-flex;width:34px;height:34px}
     .call{padding:8px 12px;font-size:12px}
     .theme-toggle{width:34px;height:34px}
+    .lang-switch--header{display:none}
+    .lang-switch--drawer{display:inline-flex;align-self:flex-start;width:max-content;margin:14px 30px 6px;height:36px}
+    .lang-switch--drawer .lang-btn{padding:0 14px;min-width:44px;font-size:11px}
     section{padding:64px 0}
   }
 </style>
@@ -397,11 +415,19 @@
   <div class="wrap nav">
     <a class="brand" href="#home"><img src="./static/velointest-logo.png" alt="Velointest — cykloservis Praha" width="140" height="34"></a>
     <nav class="links" id="nav-links">
-      <a href="#work">Cykloslužby</a>
-      <a href="#testimonial">Reference</a>
-      <a href="#about">O nás</a>
-      <a href="#contact">Kontakt</a>
+      <a href="#work" data-i18n="nav.services">Cykloslužby</a>
+      <a href="#testimonial" data-i18n="nav.reviews">Reference</a>
+      <a href="#about" data-i18n="nav.about">O nás</a>
+      <a href="#contact" data-i18n="nav.contact">Kontakt</a>
+      <div class="lang-switch lang-switch--drawer" role="group" aria-label="Language">
+        <button class="lang-btn is-active" data-lang="cs" type="button" aria-pressed="true">CS</button>
+        <button class="lang-btn" data-lang="en" type="button" aria-pressed="false">EN</button>
+      </div>
     </nav>
+    <div class="lang-switch lang-switch--header" role="group" aria-label="Language">
+      <button class="lang-btn is-active" data-lang="cs" type="button" aria-pressed="true">CS</button>
+      <button class="lang-btn" data-lang="en" type="button" aria-pressed="false">EN</button>
+    </div>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Přepnout tmavý režim">
       <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -417,27 +443,27 @@
   <div class="wrap">
     <div class="hero-inner">
       <div>
-        <div class="eyebrow"><span class="ln"></span><span class="tag">Dobrý den, jsme velointest.</span></div>
-        <h1>Tradiční pražský<br>cykloservis &amp;<br><em>bikeshop</em><br>v Hodkovičkách.</h1>
-        <p class="lead">Servisujeme kola všech typů už <span data-since-year="1992">34</span> let. Malý servis, velké knowhow — od víkendových bikerů po zkušené jezdce.</p>
+        <div class="eyebrow"><span class="ln"></span><span class="tag" data-i18n="hero.eyebrow">Dobrý den, jsme velointest.</span></div>
+        <h1 data-i18n="hero.h1">Tradiční pražský<br>cykloservis &amp;<br><em>bikeshop</em><br>v Hodkovičkách.</h1>
+        <p class="lead" data-i18n="hero.lead">Servisujeme kola všech typů už <span data-since-year="1992">34</span> let. Malý servis, velké knowhow — od víkendových bikerů po zkušené jezdce.</p>
         <p class="open-line" id="opening"></p>
         <div class="cta-row">
-          <a class="btn btn-pri" href="#work">Naše služby →</a>
-          <a class="btn btn-ghost" href="#contact">Napište nám</a>
+          <a class="btn btn-pri" href="#work" data-i18n="hero.cta1">Naše služby →</a>
+          <a class="btn btn-ghost" href="#contact" data-i18n="hero.cta2">Napište nám</a>
         </div>
       </div>
       <div class="hero-figure">
         <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
         <img src="./static/bike-work-1-r.jpg" alt="Mechanik servisuje horské kolo v dílně Velointest" fetchpriority="high">
-        <div class="cap"><span>FIG.01 — SERVIS</span><span>Na Výspě 12 · Praha 4</span></div>
+        <div class="cap"><span data-i18n="hero.cap">FIG.01 — SERVIS</span><span>Na Výspě 12 · Praha 4</span></div>
       </div>
     </div>
   </div>
   <div class="wrap" style="position:relative">
     <div class="stat-strip">
-      <div><b data-since-year="1992">34</b><span>let provozu</span></div>
-      <div><b>1.</b><span>pražský specializovaný servis</span></div>
-      <div><b>★★★★★</b><span>hodnocení na Google</span></div>
+      <div><b data-since-year="1992">34</b><span data-i18n="stats.years">let provozu</span></div>
+      <div><b>1.</b><span data-i18n="stats.first">pražský specializovaný servis</span></div>
+      <div><b>★★★★★</b><span data-i18n="stats.google">hodnocení na Google</span></div>
     </div>
   </div>
 </section>
@@ -445,19 +471,19 @@
 <!-- BIKESHOP -->
 <section id="shop">
   <div class="wrap">
-    <div class="sec-head"><span class="no">01</span><h2>Bikeshop</h2><span class="rule"></span><span class="tag">Prodej kol</span></div>
+    <div class="sec-head"><span class="no">01</span><h2 data-i18n="shop.head">Bikeshop</h2><span class="rule"></span><span class="tag" data-i18n="shop.tag">Prodej kol</span></div>
     <div class="bikes">
       <article class="bike">
         <div class="ph"><span class="idx">01 / Crussis</span><img src="./static/bike-1.jpg" alt="Elektrokolo Crussis v prodejně Velointest" loading="lazy"></div>
-        <div class="bd"><div class="brand">Moderní Crussis</div><h3>Elektrokola Crussis</h3><p>Nabízíme širokou škálu elektrokol Crussis, která spojují inovativní technologie a moderní design. Ideální volba pro vaše cyklistické dobrodružství.</p></div>
+        <div class="bd"><div class="brand" data-i18n="shop.crussis.brand">Moderní Crussis</div><h3 data-i18n="shop.crussis.title">Elektrokola Crussis</h3><p data-i18n="shop.crussis.body">Nabízíme širokou škálu elektrokol Crussis, která spojují inovativní technologie a moderní design. Ideální volba pro vaše cyklistické dobrodružství.</p></div>
       </article>
       <article class="bike">
         <div class="ph"><span class="idx">02 / Trek</span><img src="./static/bike-2.jpg" alt="Horské kolo Trek" loading="lazy"></div>
-        <div class="bd"><div class="brand">Legendární Trek</div><h3>Kola Trek</h3><p>Zprostředkováváme prodej kol Trek, která jsou známá svou kvalitou, odolností a výkonem. Vyberte si kolo, které vás nikdy nezklame.</p></div>
+        <div class="bd"><div class="brand" data-i18n="shop.trek.brand">Legendární Trek</div><h3 data-i18n="shop.trek.title">Kola Trek</h3><p data-i18n="shop.trek.body">Zprostředkováváme prodej kol Trek, která jsou známá svou kvalitou, odolností a výkonem. Vyberte si kolo, které vás nikdy nezklame.</p></div>
       </article>
       <article class="bike">
         <div class="ph"><span class="idx">03 / Leader Fox</span><img src="./static/bike-3.webp" alt="Kolo Leader Fox" loading="lazy"></div>
-        <div class="bd"><div class="brand">Kvalitní kola</div><h3>Leader Fox</h3><p>Prodáváme kola Leader Fox, která vynikají svou spolehlivostí a precizním zpracováním. Perfektní volba pro každého cyklistu.</p></div>
+        <div class="bd"><div class="brand" data-i18n="shop.lf.brand">Kvalitní kola</div><h3 data-i18n="shop.lf.title">Leader Fox</h3><p data-i18n="shop.lf.body">Prodáváme kola Leader Fox, která vynikají svou spolehlivostí a precizním zpracováním. Perfektní volba pro každého cyklistu.</p></div>
       </article>
     </div>
   </div>
@@ -467,20 +493,20 @@
 <section class="svc-section" id="work">
   <div class="grid-bg"></div>
   <div class="wrap">
-    <div class="sec-head"><span class="no">02</span><h2>Cykloslužby</h2><span class="rule"></span><span class="tag">Servis</span></div>
-    <p class="svc-intro">Servisujeme kola všech typů už <b><span data-since-year="1992">34</span> let</b> a disponujeme nepřekonatelným knowhow.</p>
+    <div class="sec-head"><span class="no">02</span><h2 data-i18n="svc.head">Cykloslužby</h2><span class="rule"></span><span class="tag" data-i18n="svc.tag">Servis</span></div>
+    <p class="svc-intro" data-i18n="svc.intro">Servisujeme kola všech typů už <b><span data-since-year="1992">34</span> let</b> a disponujeme nepřekonatelným knowhow.</p>
     <div class="svcs">
       <article class="svc">
         <div class="ph"><img src="./static/bike-work-1-r.jpg" alt="Servis kola — oprava v dílně Velointest" loading="lazy"></div>
-        <div class="bd"><div class="num">SVC.01</div><h3>Servis</h3><p>Opravíme vaše kolo.</p></div>
+        <div class="bd"><div class="num">SVC.01</div><h3 data-i18n="svc.1.title">Servis</h3><p data-i18n="svc.1.body">Opravíme vaše kolo.</p></div>
       </article>
       <article class="svc">
         <div class="ph"><img src="./static/bike-work-2-r.jpg" alt="Péče o kolo — sezónní servis" loading="lazy"></div>
-        <div class="bd"><div class="num">SVC.02</div><h3>Péče o váš bike</h3><p>Dáme vaše kolo do pořádku po sezóně.</p></div>
+        <div class="bd"><div class="num">SVC.02</div><h3 data-i18n="svc.2.title">Péče o váš bike</h3><p data-i18n="svc.2.body">Dáme vaše kolo do pořádku po sezóně.</p></div>
       </article>
       <article class="svc">
         <div class="ph"><img src="./static/bike-work-3-r.jpg" alt="Konzultace a nastavení kola podle potřeb jezdce" loading="lazy"></div>
-        <div class="bd"><div class="num">SVC.03</div><h3>Konzultace</h3><p>Nastavíme kolo podle vašich potřeb.</p></div>
+        <div class="bd"><div class="num">SVC.03</div><h3 data-i18n="svc.3.title">Konzultace</h3><p data-i18n="svc.3.body">Nastavíme kolo podle vašich potřeb.</p></div>
       </article>
     </div>
   </div>
@@ -489,12 +515,12 @@
 <!-- PACKAGES -->
 <section id="pkgs">
   <div class="wrap">
-    <div class="sec-head"><span class="no">03</span><h2>Servisní balíčky</h2><span class="rule"></span><span class="tag">Ceník</span></div>
-    <p class="pkg-intro">Příprava kola na sezónu, posezónní servis… a vše mezi tím.</p>
+    <div class="sec-head"><span class="no">03</span><h2 data-i18n="pkg.head">Servisní balíčky</h2><span class="rule"></span><span class="tag" data-i18n="pkg.tag">Ceník</span></div>
+    <p class="pkg-intro" data-i18n="pkg.intro">Příprava kola na sezónu, posezónní servis… a vše mezi tím.</p>
     <div class="pkgs">
       <article class="pkg">
-        <div class="top"><div class="code">PKG.01</div><h3>Kondiční prohlídka</h3></div>
-        <ul>
+        <div class="top"><div class="code">PKG.01</div><h3 data-i18n="pkg.1.title">Kondiční prohlídka</h3></div>
+        <ul data-i18n="pkg.1.list">
           <li>Zevrubná prohlídka celkového stavu</li>
           <li>Kontrola vůle hlavového složení</li>
           <li>Kontrola nastavení odpružení</li>
@@ -505,11 +531,11 @@
           <li>Kontrola vůlí nábojů</li>
           <li>Kontrola pneumatik</li>
         </ul>
-        <div class="price"><b>890,–&nbsp;Kč</b><span>vč. práce</span></div>
+        <div class="price"><b>890,–&nbsp;Kč</b><span data-i18n="pkg.incl">vč. práce</span></div>
       </article>
       <article class="pkg feat">
-        <div class="top"><div class="code">PKG.02 · doporučeno</div><h3>Základní sezónní</h3><div class="plus">+ vše z kondiční a navíc</div></div>
-        <ul>
+        <div class="top"><div class="code" data-i18n="pkg.2.code">PKG.02 · doporučeno</div><h3 data-i18n="pkg.2.title">Základní sezónní</h3><div class="plus" data-i18n="pkg.2.plus">+ vše z kondiční a navíc</div></div>
+        <ul data-i18n="pkg.2.list">
           <li>Umytí a vyčištění</li>
           <li>Prohlídka všech systémů kola</li>
           <li>Výměna nevyhovujících dílů běžného opotřebení</li>
@@ -520,11 +546,11 @@
           <li>Namazání řetězu</li>
           <li>Namazání kluzných ploch odpružení</li>
         </ul>
-        <div class="price"><b>2.150,–&nbsp;Kč</b><span>vč. práce</span></div>
+        <div class="price"><b>2.150,–&nbsp;Kč</b><span data-i18n="pkg.incl">vč. práce</span></div>
       </article>
       <article class="pkg">
-        <div class="top"><div class="code">PKG.03</div><h3>Kompletní roční</h3><div class="plus">+ vše ze základní a navíc</div></div>
-        <ul>
+        <div class="top"><div class="code">PKG.03</div><h3 data-i18n="pkg.3.title">Kompletní roční</h3><div class="plus" data-i18n="pkg.3.plus">+ vše ze základní a navíc</div></div>
+        <ul data-i18n="pkg.3.list">
           <li>Umytí kola a vyleštění rámu</li>
           <li>Demontáž, rozebrání a prohlídka systému pohonu</li>
           <li>Výměna ovládacích tahů</li>
@@ -533,10 +559,10 @@
           <li>Výměna kapaliny a seřízení brzd</li>
           <li>Docentrování kol a dohuštění pneumatik</li>
         </ul>
-        <div class="price"><b>od 3.490,–&nbsp;Kč</b><span>dle rozsahu</span></div>
+        <div class="price"><b data-i18n="pkg.3.price">od 3.490,–&nbsp;Kč</b><span data-i18n="pkg.3.span">dle rozsahu</span></div>
       </article>
     </div>
-    <div class="pkg-cta"><a class="btn btn-ink" href="#contact">Kontaktujte nás →</a></div>
+    <div class="pkg-cta"><a class="btn btn-ink" href="#contact" data-i18n="pkg.cta">Kontaktujte nás →</a></div>
   </div>
 </section>
 
@@ -548,10 +574,10 @@
       <img src="./static/photo-pavel2.jpeg" alt="Pavel, majitel a mechanik velointest, ve své dílně v Praze 4 Hodkovičkách" loading="lazy">
     </div>
     <div>
-      <span class="tag">O nás</span>
-      <h2>Velointest je <em>1. pražský</em> specializovaný cykloservis.</h2>
-      <p>Pomůžeme víkendovým bikerům i zkušeným jezdcům. Kolo opravuje stejný člověk, který vás přivítá u dveří — Pavel.</p>
-      <p>Přijďte se přesvědčit.</p>
+      <span class="tag" data-i18n="about.tag">O nás</span>
+      <h2 data-i18n="about.h2">Velointest je <em>1. pražský</em> specializovaný cykloservis.</h2>
+      <p data-i18n="about.p1">Pomůžeme víkendovým bikerům i zkušeným jezdcům. Kolo opravuje stejný člověk, který vás přivítá u dveří — Pavel.</p>
+      <p data-i18n="about.p2">Přijďte se přesvědčit.</p>
       <a class="addr" href="https://www.google.com/maps/place/Velointest/@50.0235373,14.4171806,17z/data=!3m1!4b1!4m5!3m4!1s0x0:0xb9853d8c478b52fe!8m2!3d50.0235065!4d14.4171829" target="_blank" rel="noopener">Na Výspě 12, 147 00 Praha 4 →</a>
     </div>
   </div>
@@ -560,21 +586,21 @@
 <!-- REFERENCE -->
 <section class="ref-section" id="testimonial">
   <div class="wrap">
-    <div class="sec-head"><span class="no">04</span><h2>Reference</h2><span class="rule"></span><span class="tag">Google hodnocení</span></div>
+    <div class="sec-head"><span class="no">04</span><h2 data-i18n="ref.head">Reference</h2><span class="rule"></span><span class="tag" data-i18n="ref.tag">Google hodnocení</span></div>
     <div class="refs">
       <article class="ref">
         <div class="stars">★★★★★</div>
-        <p>„Slušný pán, příjemný malý servis, žádný supermegamarketservis, kde jste jen další na řadě! Na počkání hodinu a půl před otevírací dobou rychlooprava.“</p>
+        <p data-i18n="ref.1.body">„Slušný pán, příjemný malý servis, žádný supermegamarketservis, kde jste jen další na řadě! Na počkání hodinu a půl před otevírací dobou rychlooprava.“</p>
         <div class="who"><b>Martin Jirásek</b> · Google</div>
       </article>
       <article class="ref">
         <div class="stars">★★★★★</div>
-        <p>„Supr servis a přístup. Servisuji u nich už třetí kolo a vždy jsem byl moc spokojen.“</p>
+        <p data-i18n="ref.2.body">„Supr servis a přístup. Servisuji u nich už třetí kolo a vždy jsem byl moc spokojen.“</p>
         <div class="who"><b>Ján Dúžik</b> · Google</div>
       </article>
       <article class="ref">
         <div class="stars">★★★★★</div>
-        <p>„Skvělý cykloservis, který nemá v okolí konkurenci. Prostě správný chlap na správném místě — tak jak to má být. Ceny i rychlost servisu velmi příznivá.“</p>
+        <p data-i18n="ref.3.body">„Skvělý cykloservis, který nemá v okolí konkurenci. Prostě správný chlap na správném místě — tak jak to má být. Ceny i rychlost servisu velmi příznivá.“</p>
         <div class="who"><b>Vojtěch Mařík</b> · Google</div>
       </article>
     </div>
@@ -584,7 +610,7 @@
 <!-- PARTNERS -->
 <div class="partners">
   <div class="wrap">
-    <div class="lbl">Spolupracujeme s těmi nejlepšími</div>
+    <div class="lbl" data-i18n="partners.lbl">Spolupracujeme s těmi nejlepšími</div>
     <div class="plogos">
       <img src="./static/shimano-logo.svg" alt="Shimano" loading="lazy">
       <img src="./static/sram-logo.svg" alt="SRAM" loading="lazy">
@@ -601,27 +627,27 @@
   <div class="wrap">
     <div class="contact-grid">
       <div>
-        <span class="tag">Spojte se s námi</span>
-        <h2>Těšíme se na vás a&nbsp;váš bike.</h2>
-        <p class="sub">Chcete se na cokoliv zeptat? Zavolejte <a href="tel:777271896" onclick="gtag('event','call_click',{'position':'contact'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a>. Nechcete volat? Napište nám.</p>
+        <span class="tag" data-i18n="contact.tag">Spojte se s námi</span>
+        <h2 data-i18n="contact.h2">Těšíme se na vás a&nbsp;váš bike.</h2>
+        <p class="sub" data-i18n="contact.sub">Chcete se na cokoliv zeptat? Zavolejte <a href="tel:777271896" onclick="gtag('event','call_click',{'position':'contact'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a>. Nechcete volat? Napište nám.</p>
         <form id="contact-form" action="https://formspree.io/f/meqdanod" method="POST">
           <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
           <div class="form-row">
-            <div class="field"><label for="jmeno">Jméno</label><input type="text" id="jmeno" name="jmeno" placeholder="Vaše jméno" required></div>
-            <div class="field"><label for="email">E-mail</label><input type="email" id="email" name="email" placeholder="vas@email.cz" required></div>
+            <div class="field"><label for="jmeno" data-i18n="form.name">Jméno</label><input type="text" id="jmeno" name="jmeno" placeholder="Vaše jméno" data-i18n-ph="form.name.ph" required></div>
+            <div class="field"><label for="email" data-i18n="form.email">E-mail</label><input type="email" id="email" name="email" placeholder="vas@email.cz" data-i18n-ph="form.email.ph" required></div>
           </div>
-          <div class="field"><label for="zprava">Zpráva</label><textarea id="zprava" name="zprava" rows="5" placeholder="Co potřebujete?" required></textarea></div>
-          <button class="btn btn-pri" type="submit">Odeslat →</button>
+          <div class="field"><label for="zprava" data-i18n="form.message">Zpráva</label><textarea id="zprava" name="zprava" rows="5" placeholder="Co potřebujete?" data-i18n-ph="form.message.ph" required></textarea></div>
+          <button class="btn btn-pri" type="submit" data-i18n="form.submit">Odeslat →</button>
           <p id="my-form-status" class="form-status"></p>
         </form>
       </div>
       <div>
         <div class="info-block">
-          <div class="row"><span class="k">Adresa</span><span class="v"><a href="https://www.google.com/maps/place/Velointest/@50.0235373,14.4171806,17z/data=!3m1!4b1!4m5!3m4!1s0x0:0xb9853d8c478b52fe!8m2!3d50.0235065!4d14.4171829" target="_blank" rel="noopener">Na Výspě 12, 147 00 Praha 4</a></span></div>
-          <div class="row"><span class="k">Telefon</span><span class="v"><a href="tel:777271896" onclick="gtag('event','call_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a></span></div>
-          <div class="row"><span class="k">E-mail</span><span class="v"><a class="email" onclick="gtag('event','email_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"></a></span></div>
-          <div class="row"><span class="k">Po–Čt</span><span class="v">10:00 – 18:00</span></div>
-          <div class="row"><span class="k">Pátek</span><span class="v">10:00 – 16:00</span></div>
+          <div class="row"><span class="k" data-i18n="info.address">Adresa</span><span class="v"><a href="https://www.google.com/maps/place/Velointest/@50.0235373,14.4171806,17z/data=!3m1!4b1!4m5!3m4!1s0x0:0xb9853d8c478b52fe!8m2!3d50.0235065!4d14.4171829" target="_blank" rel="noopener">Na Výspě 12, 147 00 Praha 4</a></span></div>
+          <div class="row"><span class="k" data-i18n="info.phone">Telefon</span><span class="v"><a href="tel:777271896" onclick="gtag('event','call_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a></span></div>
+          <div class="row"><span class="k" data-i18n="info.email">E-mail</span><span class="v"><a class="email" onclick="gtag('event','email_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"></a></span></div>
+          <div class="row"><span class="k" data-i18n="info.weekdays">Po–Čt</span><span class="v">10:00 – 18:00</span></div>
+          <div class="row"><span class="k" data-i18n="info.friday">Pátek</span><span class="v">10:00 – 16:00</span></div>
           <div class="row"><span class="k">Facebook</span><span class="v"><a href="https://www.facebook.com/velointest" target="_blank" rel="noopener">/velointest</a></span></div>
         </div>
         <div class="map" id="map">
@@ -634,7 +660,7 @@
 
 <footer id="footer">
   <div class="wrap">
-    <span>© velointest — tradiční pražský cykloservis</span>
+    <span data-i18n="footer.tagline">© velointest — tradiční pražský cykloservis</span>
     <span>Na Výspě 12, Praha 4 · <a href="tel:777271896" onclick="gtag('event','call_click',{'position':'bottom'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a> · <a class="email" onclick="gtag('event','email_click',{'position':'bottom'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"></a> · <a href="https://www.facebook.com/velointest" target="_blank" rel="noopener">facebook</a></span>
   </div>
 </footer>
@@ -645,20 +671,24 @@
     var nav = document.querySelector('header .nav');
     var btn = document.getElementById('nav-toggle');
     if(!nav || !btn) return;
+    function navLabel(open){
+      var en = document.documentElement.lang === 'en';
+      return en ? (open ? 'Close menu' : 'Open menu') : (open ? 'Zavřít menu' : 'Otevřít menu');
+    }
     function close(){
       if(!nav.classList.contains('is-open')) return;
       nav.classList.remove('is-open');
       btn.setAttribute('aria-expanded', 'false');
-      btn.setAttribute('aria-label', 'Otevřít menu');
+      btn.setAttribute('aria-label', navLabel(false));
     }
     btn.addEventListener('click', function(e){
       e.stopPropagation();
       var open = nav.classList.toggle('is-open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.setAttribute('aria-label', open ? 'Zavřít menu' : 'Otevřít menu');
+      btn.setAttribute('aria-label', navLabel(open));
     });
-    nav.querySelectorAll('.links a').forEach(function(a){
-      a.addEventListener('click', close);
+    nav.querySelectorAll('.links a, .lang-switch--drawer .lang-btn').forEach(function(el){
+      el.addEventListener('click', close);
     });
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape') close();
@@ -693,30 +723,168 @@
     }
   })();
 
-  // Years-in-business — compute from founding year so it never goes stale
-  (function(){
+  // i18n: translations dictionary + apply engine. Czech is the source/fallback
+  // (markup stays Czech, English values applied at runtime).
+  var I18N = {
+    en: {
+      // nav
+      'nav.services': 'Services',
+      'nav.reviews': 'Reviews',
+      'nav.about': 'About',
+      'nav.contact': 'Contact',
+      // hero
+      'hero.eyebrow': "Hello, we're velointest.",
+      'hero.h1': 'Traditional Prague<br>bike service &amp;<br><em>bikeshop</em><br>in Hodkovičky.',
+      'hero.lead': "We've been servicing all types of bikes for <span data-since-year=\"1992\">34</span> years. Small shop, big know-how — from weekend riders to seasoned pros.",
+      'hero.cta1': 'Our services →',
+      'hero.cta2': 'Write us',
+      'hero.cap': 'FIG.01 — WORKSHOP',
+      // stats
+      'stats.years': 'years in business',
+      'stats.first': "Prague's 1st specialized service",
+      'stats.google': 'rating on Google',
+      // shop
+      'shop.head': 'Bikeshop',
+      'shop.tag': 'Bike sales',
+      'shop.crussis.brand': 'Modern Crussis',
+      'shop.crussis.title': 'Crussis e-bikes',
+      'shop.crussis.body': 'A wide range of Crussis e-bikes combining innovative tech with modern design — an ideal choice for your cycling adventures.',
+      'shop.trek.brand': 'Legendary Trek',
+      'shop.trek.title': 'Trek bikes',
+      'shop.trek.body': "We broker Trek bikes — known for quality, durability, and performance. Pick a bike that won't let you down.",
+      'shop.lf.brand': 'Quality bikes',
+      'shop.lf.title': 'Leader Fox',
+      'shop.lf.body': 'Leader Fox bikes stand out for reliability and precision craftsmanship — a perfect choice for any cyclist.',
+      // services
+      'svc.head': 'Services',
+      'svc.tag': 'Service',
+      'svc.intro': "We've been servicing all types of bikes for <b><span data-since-year=\"1992\">34</span> years</b> with unmatched know-how.",
+      'svc.1.title': 'Repairs',
+      'svc.1.body': "We'll fix your bike.",
+      'svc.2.title': 'Bike care',
+      'svc.2.body': "We'll get your bike ready after the season.",
+      'svc.3.title': 'Consultation',
+      'svc.3.body': "We'll set your bike up to your needs.",
+      // packages
+      'pkg.head': 'Service packages',
+      'pkg.tag': 'Pricing',
+      'pkg.intro': 'Pre-season prep, post-season service… and everything between.',
+      'pkg.incl': 'incl. labor',
+      'pkg.1.title': 'Tune-up',
+      'pkg.1.list': '<li>Thorough inspection of overall condition</li><li>Headset bearing play check</li><li>Suspension setup check</li><li>Chain wear measurement and lubrication</li><li>Drivetrain adjustment</li><li>Brake adjustment</li><li>Wheel and spoke check</li><li>Hub bearing play check</li><li>Tire check</li>',
+      'pkg.2.code': 'PKG.02 · recommended',
+      'pkg.2.title': 'Standard seasonal',
+      'pkg.2.plus': '+ everything from Tune-up, plus',
+      'pkg.2.list': '<li>Wash and clean</li><li>Inspection of all bike systems</li><li>Replacement of worn wear-and-tear parts</li><li>Bolt tightening</li><li>Steering, brake, hub and bottom-bracket adjustment</li><li>Wheel truing and inflation</li><li>Suspension setup</li><li>Chain lubrication</li><li>Suspension stanchion lubrication</li>',
+      'pkg.3.title': 'Complete annual',
+      'pkg.3.plus': '+ everything from Standard, plus',
+      'pkg.3.list': '<li>Bike wash and frame polish</li><li>Drivetrain disassembly and inspection</li><li>Cable replacement</li><li>Replacement of worn wear-and-tear parts</li><li>Cleaning, lubrication and adjustment of steering, hubs and drivetrain</li><li>Brake fluid change and adjustment</li><li>Wheel truing and tire inflation</li>',
+      'pkg.3.price': 'from 3,490 CZK',
+      'pkg.3.span': 'depending on scope',
+      'pkg.cta': 'Contact us →',
+      // about
+      'about.tag': 'About',
+      'about.h2': 'Velointest is <em>Prague\'s 1st</em> specialized bike service.',
+      'about.p1': "We help weekend riders and seasoned pros alike. The same person who greets you at the door fixes your bike — Pavel.",
+      'about.p2': 'Come see for yourself.',
+      // references
+      'ref.head': 'Reviews',
+      'ref.tag': 'Google reviews',
+      'ref.1.body': '"A decent guy, pleasant small shop — none of the big-box service where you\'re just another number in the queue. Quick repair on the spot, an hour and a half before opening time."',
+      'ref.2.body': "\"Great service and attitude. Third bike I've had serviced here and I've always been very satisfied.\"",
+      'ref.3.body': '"Excellent bike service with no competition in the area. The right guy in the right place — exactly as it should be. Pricing and turnaround time both very fair."',
+      // partners
+      'partners.lbl': 'We work with the best',
+      // contact
+      'contact.tag': 'Get in touch',
+      'contact.h2': 'Looking forward to seeing you and&nbsp;your bike.',
+      'contact.sub': "Got a question? Call <a href=\"tel:777271896\" onclick=\"gtag('event','call_click',{'position':'contact'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})\">777 271 896</a>. Don't want to call? Drop us a line.",
+      'form.name': 'Name',
+      'form.name.ph': 'Your name',
+      'form.email': 'Email',
+      'form.email.ph': 'you@example.com',
+      'form.message': 'Message',
+      'form.message.ph': 'What do you need?',
+      'form.submit': 'Send →',
+      'info.address': 'Address',
+      'info.phone': 'Phone',
+      'info.email': 'Email',
+      'info.weekdays': 'Mon–Thu',
+      'info.friday': 'Friday',
+      // footer
+      'footer.tagline': '© velointest — traditional Prague bike service'
+    }
+  };
+
+  function applyYearsAndOpening(lang){
     var year = new Date().getFullYear();
     document.querySelectorAll('[data-since-year]').forEach(function(el){
       var since = parseInt(el.getAttribute('data-since-year'), 10);
       if(!isNaN(since) && since > 1900) el.textContent = String(year - since);
     });
-  })();
-
-  // Dynamic opening hours
-  (function(){
-    var text = (function(day){
-      switch(day){
-        case 0: return 'Dnes máme zavřeno';
-        case 1:
-        case 2:
-        case 3:
-        case 4: return 'Dnes máme otevřeno 10:00 – 18:00';
-        case 5: return 'Dnes máme otevřeno 10:00 – 16:00';
-        case 6: return 'Dnes máme zavřeno';
-      }
-    })(new Date().getDay());
+    var oh = lang === 'en'
+      ? { closed: "We're closed today", weekday: 'Open today 10:00 – 18:00', friday: 'Open today 10:00 – 16:00' }
+      : { closed: 'Dnes máme zavřeno', weekday: 'Dnes máme otevřeno 10:00 – 18:00', friday: 'Dnes máme otevřeno 10:00 – 16:00' };
+    var d = new Date().getDay();
+    var text = (d === 0 || d === 6) ? oh.closed : (d === 5 ? oh.friday : oh.weekday);
     var el = document.getElementById('opening');
     if(el) el.textContent = text;
+  }
+
+  // Cache original Czech innerHTML/placeholders on first run so toggling back works
+  function cacheCzechFallbacks(){
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      if(!('csHtml' in el.dataset)) el.dataset.csHtml = el.innerHTML;
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+      if(!('csPh' in el.dataset)) el.dataset.csPh = el.getAttribute('placeholder') || '';
+    });
+  }
+
+  function applyLang(lang){
+    document.documentElement.lang = lang;
+    cacheCzechFallbacks();
+    var dict = I18N[lang] || null;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      if(lang === 'cs') el.innerHTML = el.dataset.csHtml;
+      else if(dict && dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+      var key = el.getAttribute('data-i18n-ph');
+      if(lang === 'cs') el.setAttribute('placeholder', el.dataset.csPh);
+      else if(dict && dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
+    });
+    // years + opening hours (must run AFTER innerHTML swap, since data-since-year spans get recreated)
+    applyYearsAndOpening(lang);
+    // language-switch button active state
+    document.querySelectorAll('.lang-btn').forEach(function(b){
+      var on = b.getAttribute('data-lang') === lang;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    // localized aria-labels for header buttons
+    var navBtn = document.getElementById('nav-toggle');
+    if(navBtn){
+      var open = navBtn.getAttribute('aria-expanded') === 'true';
+      navBtn.setAttribute('aria-label', lang === 'en'
+        ? (open ? 'Close menu' : 'Open menu')
+        : (open ? 'Zavřít menu' : 'Otevřít menu'));
+    }
+    var themeBtn = document.getElementById('theme-toggle');
+    if(themeBtn) themeBtn.setAttribute('aria-label', lang === 'en' ? 'Toggle dark mode' : 'Přepnout tmavý režim');
+  }
+
+  (function(){
+    var initial = document.documentElement.lang === 'en' ? 'en' : 'cs';
+    document.querySelectorAll('.lang-btn').forEach(function(b){
+      b.addEventListener('click', function(){
+        var l = b.getAttribute('data-lang');
+        applyLang(l);
+        try { localStorage.setItem('vi-lang', l); } catch(e){}
+      });
+    });
+    applyLang(initial);
   })();
 
   // Email obfuscation
@@ -738,12 +906,16 @@
       e.preventDefault();
       status.className = 'form-status';
       status.textContent = '';
+      var lang = document.documentElement.lang === 'en' ? 'en' : 'cs';
+      var msgs = lang === 'en'
+        ? { ok: '✓ Your message has been sent. Thanks.', err: 'Sorry, there was a problem sending. Please email velointest@velointest.cz or call 777 271 896.' }
+        : { ok: '✓ Vaše zpráva je úspěšně odeslaná. Děkujeme.', err: 'Omlouváme se, nastal problém při odesílání. Napište prosím na velointest@velointest.cz nebo zavolejte 777 271 896.' };
       var data = new FormData(form);
       fetch(form.action, { method: form.method, body: data, headers: { 'Accept': 'application/json' } })
         .then(function(response){
           if(response.ok){
             status.classList.add('ok');
-            status.textContent = '✓ Vaše zpráva je úspěšně odeslaná. Děkujeme.';
+            status.textContent = msgs.ok;
             form.reset();
           } else {
             response.json().then(function(data){
@@ -751,14 +923,14 @@
               if(data && data.errors){
                 status.textContent = data.errors.map(function(er){ return er.message; }).join(', ');
               } else {
-                status.textContent = 'Omlouváme se, nastal problém při odesílání. Napište prosím na velointest@velointest.cz nebo zavolejte 777 271 896.';
+                status.textContent = msgs.err;
               }
             });
           }
         })
         .catch(function(){
           status.classList.add('err');
-          status.textContent = 'Omlouváme se, nastal problém při odesílání. Napište prosím na velointest@velointest.cz nebo zavolejte 777 271 896.';
+          status.textContent = msgs.err;
         });
     });
   })();
