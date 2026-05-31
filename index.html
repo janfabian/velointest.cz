@@ -824,17 +824,39 @@
       var since = parseInt(el.getAttribute('data-since-year'), 10);
       if(!isNaN(since) && since > 1900) el.textContent = String(year - since);
     });
-    var oh = lang === 'en'
-      ? { closed: "We're closed today", weekday: 'Open today 10:00 – 18:00', friday: 'Open today 10:00 – 16:00' }
-      : { closed: 'Dnes máme zavřeno', weekday: 'Dnes máme otevřeno 10:00 – 18:00', friday: 'Dnes máme otevřeno 10:00 – 16:00' };
     var now = new Date();
-    var d = now.getDay();
-    var text = (d === 0 || d === 6) ? oh.closed : (d === 5 ? oh.friday : oh.weekday);
+    var d = now.getDay();                                  // 0=Sun..6=Sat
+    var minutes = now.getHours() * 60 + now.getMinutes();
+    var OPEN = 10 * 60;
+    var todayClose = (d === 5) ? 16 * 60 : 18 * 60;        // Fri closes 16, Mon-Thu close 18
+    var isWeekday = d >= 1 && d <= 5;
+    var isOpen = isWeekday && minutes >= OPEN && minutes < todayClose;
+
+    var text;
+    if(isOpen){
+      text = lang === 'en'
+        ? (d === 5 ? 'Open today 10:00 – 16:00' : 'Open today 10:00 – 18:00')
+        : (d === 5 ? 'Dnes máme otevřeno 10:00 – 16:00' : 'Dnes máme otevřeno 10:00 – 18:00');
+    } else {
+      // Closed — figure out when the shop opens next (today / tomorrow / Monday)
+      var nextLabel;
+      if(isWeekday && minutes < OPEN){
+        nextLabel = lang === 'en' ? 'today at 10:00' : 'dnes v 10:00';
+      } else if(d === 6){              // Saturday → Monday
+        nextLabel = lang === 'en' ? 'Monday at 10:00' : 'v pondělí v 10:00';
+      } else if(d === 5){              // Friday evening → Monday
+        nextLabel = lang === 'en' ? 'Monday at 10:00' : 'v pondělí v 10:00';
+      } else {                          // Sun OR Mon-Thu evening → tomorrow
+        nextLabel = lang === 'en' ? 'tomorrow at 10:00' : 'zítra v 10:00';
+      }
+      text = lang === 'en'
+        ? 'Closed — opens ' + nextLabel
+        : 'Zavřeno — otevíráme ' + nextLabel;
+    }
+
     var el = document.getElementById('opening');
     if(el) el.textContent = text;
-    // Live open-state for the phone-button dot (green when shop is open, red when closed)
-    var minutes = now.getHours() * 60 + now.getMinutes();
-    var isOpen = (d >= 1 && d <= 5) && minutes >= 600 && minutes < (d === 5 ? 960 : 1080);
+    // Phone-button dot reflects the same open-state
     document.querySelectorAll('.call').forEach(function(c){
       c.classList.toggle('is-open', isOpen);
     });
