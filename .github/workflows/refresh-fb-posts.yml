@@ -1,0 +1,47 @@
+name: Refresh Facebook posts
+
+on:
+  schedule:
+    # every 6h at the top of the hour (UTC): 00:00, 06:00, 12:00, 18:00
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-fb-posts
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install fb/ dependencies
+        working-directory: fb
+        run: bun install --frozen-lockfile
+
+      - name: Fetch latest 3 posts → static/fb-posts.json
+        working-directory: fb
+        env:
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
+        run: bun run posts:fetch
+
+      - name: Commit + push if the JSON changed
+        run: |
+          if git diff --quiet -- static/fb-posts.json; then
+            echo "fb-posts.json unchanged — nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add static/fb-posts.json
+          git commit -m "chore: refresh fb-posts.json [skip ci]"
+          git push
