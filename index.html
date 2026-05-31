@@ -316,16 +316,32 @@
   .ref .who{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
   .ref .who b{color:var(--ink)}
 
-  .fb-posts{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-  .fb-post{border:1px solid var(--line);background:#fff;display:flex;flex-direction:column}
-  .fb-post .ph{aspect-ratio:1/1;overflow:hidden;background:var(--paper-2)}
-  .fb-post .ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+  /* asymmetric layout: 1 hero card on the left + 2 mini cards stacked on the right */
+  .fb-posts{display:grid;grid-template-columns:1.7fr 1fr;grid-auto-rows:1fr;gap:24px}
+  .fb-post{border:1px solid var(--line);background:#fff;overflow:hidden}
+  .fb-post .ph{overflow:hidden;background:var(--paper-2);display:block}
+  .fb-post .ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s;display:block}
   .fb-post:hover .ph img{transform:scale(1.03)}
-  .fb-post .bd{padding:20px 22px 22px;display:flex;flex-direction:column;gap:12px;flex:1}
   .fb-post .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--steel);text-transform:uppercase}
-  .fb-post p{font-size:14.5px;color:#3c4148;flex:1;line-height:1.55;white-space:pre-wrap}
-  .fb-post .more{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--steel);text-transform:uppercase;padding-top:10px;border-top:1px solid var(--line);transition:.15s}
+  .fb-post .meta .badge{margin-left:8px;color:var(--signal)}
+  .fb-post p{color:#3c4148;line-height:1.55;white-space:pre-wrap;margin:0}
+  .fb-post .more{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--steel);text-transform:uppercase;transition:.15s;display:inline-block}
   .fb-post .more:hover{color:var(--ink)}
+
+  /* hero card — spans both rows on the left, photo on top, big caption beneath */
+  .fb-post.is-hero{grid-column:1;grid-row:1 / span 2;display:flex;flex-direction:column}
+  .fb-post.is-hero .ph{aspect-ratio:4/3}
+  .fb-post.is-hero .bd{padding:26px 28px 28px;display:flex;flex-direction:column;gap:16px;flex:1}
+  .fb-post.is-hero p{font-size:16px;flex:1}
+  .fb-post.is-hero .more{padding-top:12px;border-top:1px solid var(--line)}
+
+  /* mini cards — compact feed entries, square thumb on the left, text on the right */
+  .fb-post.is-mini{display:grid;grid-template-columns:130px 1fr;align-items:stretch}
+  .fb-post.is-mini .ph{aspect-ratio:1/1;height:100%}
+  .fb-post.is-mini .bd{padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+  .fb-post.is-mini p{font-size:13.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .fb-post.is-mini .more{margin-top:auto}
+
   .fb-empty{font-family:var(--mono);font-size:13px;color:var(--muted);text-align:center;padding:24px 0}
 
   .partners{padding:64px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -405,6 +421,11 @@
     .hero-inner,.about,.contact-grid{grid-template-columns:1fr;gap:36px}
     .hero-figure img{height:300px}
     .bikes,.svcs,.pkgs,.refs{grid-template-columns:1fr}
+    .fb-posts{grid-template-columns:1fr;grid-auto-rows:auto}
+    .fb-post.is-hero{grid-column:auto;grid-row:auto}
+    .fb-post.is-hero .ph{aspect-ratio:16/10}
+    .fb-post.is-hero .bd{padding:20px 22px 22px}
+    .fb-post.is-mini{grid-template-columns:110px 1fr}
     .form-row{grid-template-columns:1fr}
     .nav{gap:10px;height:64px;position:relative}
     .nav .links{
@@ -965,21 +986,27 @@
       if(!Array.isArray(posts) || posts.length === 0){ section.hidden = true; return; }
       section.hidden = false;
       var moreLabel = (lang === 'en') ? 'View on Facebook →' : 'Otevřít na Facebooku →';
+      var latestBadge = (lang === 'en') ? 'LATEST' : 'NEJNOVĚJŠÍ';
       var fmt = new Intl.DateTimeFormat(
         lang === 'en' ? 'en-GB' : 'cs-CZ',
         { day: 'numeric', month: 'long', year: 'numeric' },
       );
-      grid.innerHTML = posts.slice(0, 3).map(function(p){
+      grid.innerHTML = posts.slice(0, 3).map(function(p, idx){
+        var isHero = idx === 0;
+        var maxChars = isHero ? 420 : 130;
         var d = p.createdAt ? new Date(p.createdAt) : null;
         var date = d && !isNaN(d.getTime()) ? fmt.format(d) : '';
         var raw = String(p.text || '');
-        var text = raw.length > 200 ? raw.slice(0, 200).trimEnd() + '…' : raw;
+        var text = raw.length > maxChars ? raw.slice(0, maxChars).trimEnd() + '…' : raw;
         var img = p.image
           ? '<a href="' + escapeHtml(p.url) + '" target="_blank" rel="noopener" class="ph"><img src="' + escapeHtml(p.image) + '" alt="" loading="lazy"></a>'
           : '';
-        return '<article class="fb-post">' + img
+        var meta = date
+          ? '<div class="meta">' + escapeHtml(date) + (isHero ? '<span class="badge">• ' + escapeHtml(latestBadge) + '</span>' : '') + '</div>'
+          : '';
+        return '<article class="fb-post ' + (isHero ? 'is-hero' : 'is-mini') + '">' + img
           + '<div class="bd">'
-          +   (date ? '<div class="meta">' + escapeHtml(date) + '</div>' : '')
+          +   meta
           +   '<p>' + escapeHtml(text) + '</p>'
           +   '<a class="more" href="' + escapeHtml(p.url) + '" target="_blank" rel="noopener">' + moreLabel + '</a>'
           + '</div>'
