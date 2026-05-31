@@ -6,7 +6,8 @@
   "scripts": {
     "publish": "bun run src/publish.ts",
     "auth": "bun run scripts/auth.ts",
-    "check": "bun run src/publish.ts --check"
+    "check": "bun run src/publish.ts --check",
+    "posts:fetch": "bun run scripts/fetch-posts.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

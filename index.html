@@ -316,6 +316,36 @@
   .ref .who{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
   .ref .who b{color:var(--ink)}
 
+  /* asymmetric layout: hero card on the left + a flex stack of 2 mini cards on the right */
+  .fb-posts{display:grid;grid-template-columns:1.7fr 1fr;gap:24px;align-items:stretch}
+  .fb-stack{display:flex;flex-direction:column;gap:24px;min-width:0}
+  .fb-post{border:1px solid var(--line);background:#fff;overflow:hidden}
+  .fb-post .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--steel);text-transform:uppercase}
+  .fb-post .meta .badge{margin-left:8px;color:var(--signal)}
+  .fb-post p{color:#3c4148;line-height:1.55;white-space:pre-wrap;margin:0}
+  .fb-post .more{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--steel);text-transform:uppercase;transition:.15s;display:inline-block;align-self:flex-start}
+  .fb-post .more:hover{color:var(--ink)}
+
+  /* hero card — photo on top, big caption beneath */
+  .fb-post.is-hero{display:flex;flex-direction:column}
+  .fb-post.is-hero .ph{display:block;aspect-ratio:4/3;overflow:hidden;background:var(--paper-2)}
+  .fb-post.is-hero .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+  .fb-post.is-hero:hover .ph img{transform:scale(1.03)}
+  .fb-post.is-hero .bd{padding:26px 28px 28px;display:flex;flex-direction:column;gap:16px;flex:1}
+  .fb-post.is-hero p{font-size:16px;flex:1}
+  .fb-post.is-hero .more{padding-top:12px;border-top:1px solid var(--line);align-self:stretch}
+
+  /* mini cards — same vertical layout as the hero (photo on top, caption below), just smaller */
+  .fb-post.is-mini{display:flex;flex-direction:column;flex:1 1 0;min-height:0}
+  .fb-post.is-mini .ph{aspect-ratio:16/9;overflow:hidden;background:var(--paper-2);display:block}
+  .fb-post.is-mini .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+  .fb-post.is-mini:hover .ph img{transform:scale(1.03)}
+  .fb-post.is-mini .bd{flex:1;padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;min-height:0}
+  .fb-post.is-mini p{font-size:13.5px;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .fb-post.is-mini .more{padding-top:10px;border-top:1px solid var(--line);align-self:stretch}
+
+  .fb-empty{font-family:var(--mono);font-size:13px;color:var(--muted);text-align:center;padding:24px 0}
+
   .partners{padding:64px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .partners .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:30px}
   .plogos{display:flex;align-items:center;justify-content:center;gap:54px;flex-wrap:wrap}
@@ -377,6 +407,11 @@
   [data-theme="dark"] .pkg-intro{color:#E7E8E3}
   [data-theme="dark"] .btn-ink{background:#272E38}
   [data-theme="dark"] .btn-ink:hover{background:#323a47}
+  [data-theme="dark"] .fb-post{background:#1B2027;border-color:#2f3640}
+  [data-theme="dark"] .fb-post p{color:#d4d8de}
+  [data-theme="dark"] .fb-post .ph{background:#13161B}
+  [data-theme="dark"] .fb-post .more{border-top-color:#2f3640}
+  [data-theme="dark"] .fb-post .more:hover{color:#fff}
   [data-theme="dark"] .partners{border-top-color:#2f3640;border-bottom-color:#2f3640}
   [data-theme="dark"] .partners .lbl{color:#8b929b}
   [data-theme="dark"] .plogos img{filter:grayscale(1) invert(.85) opacity(.7)}
@@ -388,6 +423,11 @@
     .hero-inner,.about,.contact-grid{grid-template-columns:1fr;gap:36px}
     .hero-figure img{height:300px}
     .bikes,.svcs,.pkgs,.refs{grid-template-columns:1fr}
+    .fb-posts{grid-template-columns:1fr}
+    .fb-post.is-hero .ph{aspect-ratio:16/10}
+    .fb-post.is-hero .bd{padding:20px 22px 22px}
+    .fb-post.is-mini{flex:0 0 auto}
+    .fb-post.is-mini .ph{aspect-ratio:16/10}
     .form-row{grid-template-columns:1fr}
     .nav{gap:10px;height:64px;position:relative}
     .nav .links{
@@ -609,6 +649,15 @@
   </div>
 </section>
 
+<!-- FACEBOOK POSTS -->
+<section class="fb-section" id="fb-posts" hidden>
+  <div class="wrap">
+    <div class="sec-head"><span class="no">05</span><h2 data-i18n="fb.head">Z&nbsp;Facebooku</h2><span class="rule"></span><span class="tag" data-i18n="fb.tag">Co se u nás děje</span></div>
+    <div class="fb-posts" id="fb-posts-grid"></div>
+    <p class="fb-empty" id="fb-empty" hidden data-i18n="fb.empty">Žádné příspěvky nejsou k zobrazení.</p>
+  </div>
+</section>
+
 <!-- PARTNERS -->
 <div class="partners">
   <div class="wrap">
@@ -795,6 +844,10 @@
       'ref.1.body': '"A decent guy, pleasant small shop — none of the big-box service where you\'re just another number in the queue. Quick repair on the spot, an hour and a half before opening time."',
       'ref.2.body': "\"Great service and attitude. Third bike I've had serviced here and I've always been very satisfied.\"",
       'ref.3.body': '"Excellent bike service with no competition in the area. The right guy in the right place — exactly as it should be. Pricing and turnaround time both very fair."',
+      // facebook posts
+      'fb.head': 'From&nbsp;Facebook',
+      'fb.tag': "What's new",
+      'fb.empty': 'No posts to display.',
       // partners
       'partners.lbl': 'We work with the best',
       // contact
@@ -904,6 +957,8 @@
     }
     var themeBtn = document.getElementById('theme-toggle');
     if(themeBtn) themeBtn.setAttribute('aria-label', lang === 'en' ? 'Toggle dark mode' : 'Přepnout tmavý režim');
+    // Re-render the Facebook-posts section with the new language (no refetch).
+    if(typeof window.__renderFbPosts === 'function') window.__renderFbPosts(lang);
   }
 
   (function(){
@@ -916,6 +971,62 @@
       });
     });
     applyLang(initial);
+  })();
+
+  // Facebook posts — fetch ./static/fb-posts.json once, render, re-render on lang change.
+  (function(){
+    var section = document.getElementById('fb-posts');
+    var grid = document.getElementById('fb-posts-grid');
+    if(!section || !grid) return;
+    var posts = null;
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, function(c){
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+      });
+    }
+    function render(lang){
+      if(!Array.isArray(posts) || posts.length === 0){ section.hidden = true; return; }
+      section.hidden = false;
+      var moreLabel = (lang === 'en') ? 'View on Facebook →' : 'Otevřít na Facebooku →';
+      var latestBadge = (lang === 'en') ? 'LATEST' : 'NEJNOVĚJŠÍ';
+      var fmt = new Intl.DateTimeFormat(
+        lang === 'en' ? 'en-GB' : 'cs-CZ',
+        { day: 'numeric', month: 'long', year: 'numeric' },
+      );
+      function card(p, isHero){
+        var maxChars = isHero ? 420 : 140;
+        var d = p.createdAt ? new Date(p.createdAt) : null;
+        var date = d && !isNaN(d.getTime()) ? fmt.format(d) : '';
+        var raw = String(p.text || '');
+        var text = raw.length > maxChars ? raw.slice(0, maxChars).trimEnd() + '…' : raw;
+        var img = p.image
+          ? '<a href="' + escapeHtml(p.url) + '" target="_blank" rel="noopener" class="ph"><img src="' + escapeHtml(p.image) + '" alt="" loading="lazy"></a>'
+          : '';
+        var meta = date
+          ? '<div class="meta">' + escapeHtml(date) + (isHero ? '<span class="badge">• ' + escapeHtml(latestBadge) + '</span>' : '') + '</div>'
+          : '';
+        return '<article class="fb-post ' + (isHero ? 'is-hero' : 'is-mini') + '">' + img
+          + '<div class="bd">'
+          +   meta
+          +   '<p>' + escapeHtml(text) + '</p>'
+          +   '<a class="more" href="' + escapeHtml(p.url) + '" target="_blank" rel="noopener">' + moreLabel + '</a>'
+          + '</div>'
+          + '</article>';
+      }
+      var slice = posts.slice(0, 3);
+      var hero = slice[0] ? card(slice[0], true) : '';
+      var minis = slice.slice(1).map(function(p){ return card(p, false); }).join('');
+      grid.innerHTML = hero + (minis ? '<div class="fb-stack">' + minis + '</div>' : '');
+    }
+    // Expose so applyLang can re-render without re-fetching.
+    window.__renderFbPosts = function(lang){ render(lang); };
+    fetch('./static/fb-posts.json', { cache: 'no-store' })
+      .then(function(r){ return r.ok ? r.json() : []; })
+      .then(function(data){
+        posts = Array.isArray(data) ? data : [];
+        render(document.documentElement.lang === 'en' ? 'en' : 'cs');
+      })
+      .catch(function(){ posts = []; section.hidden = true; });
   })();
 
   // Email obfuscation
