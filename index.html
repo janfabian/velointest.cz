@@ -173,8 +173,9 @@
     background-size:34px 34px;
   }
 
+  .topbar{position:sticky;top:0;z-index:50}
   .alert-strip{background:var(--signal);color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;text-align:center;padding:10px 22px}
-  header{position:sticky;top:0;z-index:50;background:var(--ink);border-bottom:1px solid #2b323c}
+  header{background:var(--ink);border-bottom:1px solid #2b323c}
   .nav{display:flex;align-items:center;gap:30px;height:74px}
   .nav .brand img{height:34px;width:auto;filter:saturate(.9)}
   .nav .links{display:flex;gap:26px;margin-left:auto}
@@ -469,6 +470,7 @@
 </head>
 <body>
 
+<div class="topbar">
 <div class="alert-strip" id="alert-strip" data-until="2026-06-05" data-i18n="alert.closed">V pátek 5. 6. máme zavřeno</div>
 <header>
   <div class="wrap nav">
@@ -495,6 +497,7 @@
     <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Otevřít menu" aria-expanded="false" aria-controls="nav-links"><span class="bars" aria-hidden="true"></span></button>
   </div>
 </header>
+</div>
 
 <!-- HERO -->
 <section class="hero" id="home" style="padding:0">
