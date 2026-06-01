@@ -1085,7 +1085,10 @@
             // Errors are logged but never surfaced — Formspree already delivered
             // the submission to the owner, so the form was effectively successful.
             if(window.emailjs && visitorEmail){
-              emailjs.send('service_qttkrhw', 'template_tuklq4l', {
+              var emailjsTemplate = document.documentElement.lang === 'en'
+                ? 'template_sdbn5el'  // EN: "Thank you for your message — Velointest"
+                : 'template_tuklq4l'; // CS: "Děkujeme za vaši zprávu — Velointest"
+              emailjs.send('service_qttkrhw', emailjsTemplate, {
                 name: visitorName,
                 email: visitorEmail,
               }).catch(function(err){
