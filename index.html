@@ -124,6 +124,12 @@
   });
 </script>
 
+<!-- EmailJS — auto-reply to form submitters after Formspree confirms 200 -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  if (window.emailjs) emailjs.init({ publicKey: 'iwmJhCEo9ikc2PIzz' });
+</script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9XTB4M7SVE"></script>
 <script>
@@ -1067,12 +1073,25 @@
         ? { ok: '✓ Your message has been sent. Thanks.', err: 'Sorry, there was a problem sending. Please email velointest@velointest.cz or call 777 271 896.' }
         : { ok: '✓ Vaše zpráva je úspěšně odeslaná. Děkujeme.', err: 'Omlouváme se, nastal problém při odesílání. Napište prosím na velointest@velointest.cz nebo zavolejte 777 271 896.' };
       var data = new FormData(form);
+      var visitorName = (data.get('jmeno') || '').toString().trim();
+      var visitorEmail = (data.get('email') || '').toString().trim();
       fetch(form.action, { method: form.method, body: data, headers: { 'Accept': 'application/json' } })
         .then(function(response){
           if(response.ok){
             status.classList.add('ok');
             status.textContent = msgs.ok;
             form.reset();
+            // Fire-and-forget confirmation email to the visitor via EmailJS.
+            // Errors are logged but never surfaced — Formspree already delivered
+            // the submission to the owner, so the form was effectively successful.
+            if(window.emailjs && visitorEmail){
+              emailjs.send('service_qttkrhw', 'template_tuklq4l', {
+                name: visitorName,
+                email: visitorEmail,
+              }).catch(function(err){
+                console.warn('EmailJS confirmation failed:', err);
+              });
+            }
           } else {
             response.json().then(function(data){
               status.classList.add('err');
