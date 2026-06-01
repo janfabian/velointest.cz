@@ -173,6 +173,7 @@
     background-size:34px 34px;
   }
 
+  .alert-strip{background:var(--signal);color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;text-align:center;padding:10px 22px}
   header{position:sticky;top:0;z-index:50;background:var(--ink);border-bottom:1px solid #2b323c}
   .nav{display:flex;align-items:center;gap:30px;height:74px}
   .nav .brand img{height:34px;width:auto;filter:saturate(.9)}
@@ -468,6 +469,7 @@
 </head>
 <body>
 
+<div class="alert-strip" id="alert-strip" data-until="2026-06-05" data-i18n="alert.closed">V pátek 5. 6. máme zavřeno</div>
 <header>
   <div class="wrap nav">
     <a class="brand" href="#home"><img src="./static/velointest-logo-arch.png" alt="Velointest — cykloservis Praha"></a>
@@ -887,7 +889,9 @@
       'info.weekdays': 'Mon–Thu',
       'info.friday': 'Friday',
       // footer
-      'footer.tagline': '© velointest — traditional Prague bike service'
+      'footer.tagline': '© velointest — traditional Prague bike service',
+      // temporary alerts
+      'alert.closed': 'Closed Friday, June 5'
     }
   };
 
@@ -991,6 +995,19 @@
       });
     });
     applyLang(initial);
+  })();
+
+  // Time-bounded alert strip — auto-removes the element once its data-until date has passed.
+  // The element stays in HTML for the simplest possible authoring (no manual cleanup), but
+  // visitors after the date never see it.
+  (function(){
+    var strip = document.getElementById('alert-strip');
+    if(!strip) return;
+    var until = strip.getAttribute('data-until');
+    if(!until) return;
+    // Treat the date as end-of-day in Prague (UTC+2 in summer). Parse as local midnight + 1 day - 1ms.
+    var endOfDay = new Date(until + 'T23:59:59');
+    if(isNaN(endOfDay.getTime()) || new Date() > endOfDay) strip.remove();
   })();
 
   // Facebook posts — fetch ./static/fb-posts.json once, render, re-render on lang change.
