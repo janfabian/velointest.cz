@@ -1101,6 +1101,11 @@
             status.classList.add('ok');
             status.textContent = msgs.ok;
             form.reset();
+            // Google Ads: count a successful form submit as a lead conversion
+            // (same "Website lead" action as the phone/email click handlers).
+            if(typeof gtag === 'function'){
+              gtag('event', 'conversion', { 'send_to': 'AW-858687502/TpQdCMXWs-ADEI6QupkD' });
+            }
             // Fire-and-forget confirmation email to the visitor via EmailJS.
             // Errors are logged but never surfaced — Formspree already delivered
             // the submission to the owner, so the form was effectively successful.
