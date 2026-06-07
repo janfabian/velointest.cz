@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "publish": "bun run src/publish.ts",
+    "admin": "bun run src/admin.ts",
     "auth": "bun run scripts/auth.ts",
     "check": "bun run src/publish.ts --check",
     "posts:fetch": "bun run scripts/fetch-posts.ts"
