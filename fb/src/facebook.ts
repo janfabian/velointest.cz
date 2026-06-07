@@ -96,6 +96,15 @@ export class FacebookPublisher {
     if (!post.text && media.length === 0 && !post.link)
       return fail("validation", "post must contain text, media, or a link");
 
+    // Duplicate guard for cross-invocation retries: if an identical post was
+    // created on the page within the last few minutes (e.g. a previous run
+    // that "failed" on the response path but committed server-side), return
+    // it instead of posting again.
+    if (post.text) {
+      const existing = await this.findJustCreatedPost(post.text);
+      if (existing) return await ok(existing);
+    }
+
     try {
       if (videos.length === 1) {
         const video = videos[0]!;
@@ -133,9 +142,44 @@ export class FacebookPublisher {
       const res = await this.graph(`${this.pageId}/feed`, body);
       return await ok(String(res.id));
     } catch (err) {
+      // The Graph API sometimes commits the post server-side and THEN fails on
+      // the response path (seen live: "Please reduce the amount of data you're
+      // asking for" after a successful multi-photo /feed create). Reporting
+      // failure here invites a blind retry → duplicate post. Before failing,
+      // check whether a post with this exact text just appeared on the page;
+      // if so, the publish actually succeeded — return it as success.
+      if (post.text) {
+        const recovered = await this.findJustCreatedPost(post.text);
+        if (recovered) return await ok(recovered);
+      }
       const { errorCode, message } = mapFbError(err);
       return fail(errorCode, message);
     }
+  }
+
+  /**
+   * Duplicate guard: look for a post on the page whose message matches `text`
+   * exactly and was created within the last few minutes. Returns its id, or
+   * null. Swallows its own errors (it's a best-effort recovery probe).
+   */
+  private async findJustCreatedPost(text: string): Promise<string | null> {
+    try {
+      const res = await this.graph(
+        `${this.pageId}/posts?fields=id,message,created_time&limit=5&access_token=${encodeURIComponent(this.token)}`,
+        undefined,
+        "GET",
+      );
+      const posts = (res.data ?? []) as Array<{ id?: string; message?: string; created_time?: string }>;
+      const cutoff = Date.now() - 5 * 60 * 1000;
+      for (const p of posts) {
+        if (!p.id || (p.message ?? "") !== text) continue;
+        const created = p.created_time ? Date.parse(p.created_time) : NaN;
+        if (!isNaN(created) && created >= cutoff) return p.id;
+      }
+    } catch {
+      /* best-effort only */
+    }
+    return null;
   }
 
   /** Best-effort liveness probe: read the Page's name. */
