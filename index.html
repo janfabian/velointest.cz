@@ -207,6 +207,8 @@
   }
   .wa-btn:hover{border-color:#25D366;background:rgba(37,211,102,.12);color:#3ae07a}
   .wa-btn svg{width:18px;height:18px;display:block;fill:currentColor}
+  /* sit the WA icon right next to the phone number (override the nav's 30px gap → ~5px) */
+  .call + .wa-btn{margin-left:-25px}
   /* inline WhatsApp glyph used next to the number in contact/footer */
   .wa-inline{display:inline-flex;align-items:center;gap:5px;color:#25D366}
   .wa-inline svg{width:14px;height:14px;fill:currentColor;display:block}
@@ -501,6 +503,7 @@
     .nav-toggle{display:inline-flex;width:34px;height:34px}
     .call{padding:8px 12px;font-size:12px}
     .wa-btn{width:34px;height:34px}
+    .call + .wa-btn{margin-left:0}
     .nav{gap:8px}
     .lang-switch--header{display:none}
     /* theme toggle lives in the drawer on mobile, not floating */
