@@ -199,6 +199,17 @@
   .call:hover{border-color:var(--steel);background:var(--slate-2)}
   .call .dot{width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 0 3px rgba(215,50,43,.25);transition:.2s}
   .call.is-open .dot{background:#3aaa5e;box-shadow:0 0 0 3px rgba(58,170,94,.28)}
+  /* WhatsApp icon button (navbar) — recognizable green, sized like theme toggle */
+  .wa-btn{
+    width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;
+    border:1px solid #3a424d;color:#25D366;transition:.2s;flex-shrink:0;
+  }
+  .wa-btn:hover{border-color:#25D366;background:rgba(37,211,102,.12);color:#3ae07a}
+  .wa-btn svg{width:18px;height:18px;display:block;fill:currentColor}
+  /* inline WhatsApp glyph used next to the number in contact/footer */
+  .wa-inline{display:inline-flex;align-items:center;gap:5px;color:#25D366}
+  .wa-inline svg{width:14px;height:14px;fill:currentColor;display:block}
+  .wa-inline:hover{color:#3ae07a}
   .theme-toggle{
     width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;
     border:1px solid #3a424d;color:#cfd4da;transition:.2s;flex-shrink:0;
@@ -475,6 +486,8 @@
     .nav-toggle{display:inline-flex;width:34px;height:34px}
     .call{padding:8px 12px;font-size:12px}
     .theme-toggle{width:34px;height:34px}
+    .wa-btn{width:34px;height:34px}
+    .nav{gap:8px}
     .lang-switch--header{display:none}
     .lang-switch--drawer{display:inline-flex;align-self:flex-start;width:max-content;margin:14px 30px 6px;height:36px}
     .lang-switch--drawer .lang-btn{padding:0 14px;min-width:44px;font-size:11px}
@@ -506,6 +519,7 @@
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
     </button>
     <a class="call" href="tel:777271896" onclick="gtag('event','call_click',{'position':'menu'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'});"><span class="dot"></span>777 271 896</a>
+    <a class="wa-btn" href="https://wa.me/420777271896" target="_blank" rel="noopener" aria-label="Napsat na WhatsApp" data-i18n-aria="wa.aria" onclick="gtag('event','whatsapp_click',{'position':'menu'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'});"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.74-.86-2.01-.96-.27-.1-.47-.15-.66.15-.2.29-.76.95-.93 1.15-.17.2-.34.22-.63.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.04-.17-.3-.02-.46.13-.6.13-.13.3-.34.44-.51.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.51-.08-.15-.66-1.59-.9-2.18-.24-.57-.48-.5-.66-.5l-.56-.01c-.2 0-.51.07-.78.36-.27.29-1.02 1-1.02 2.43 0 1.44 1.05 2.83 1.2 3.02.15.2 2.06 3.15 5 4.42.7.3 1.24.48 1.67.62.7.22 1.34.19 1.84.12.56-.09 1.74-.71 1.98-1.4.24-.68.24-1.27.17-1.39-.07-.12-.27-.19-.56-.34zM12.05 21.5h-.01a9.46 9.46 0 0 1-4.82-1.32l-.35-.21-3.58.94.96-3.49-.22-.36a9.42 9.42 0 0 1-1.45-5.03c0-5.21 4.25-9.45 9.46-9.45 2.53 0 4.9.99 6.68 2.78a9.39 9.39 0 0 1 2.77 6.68c0 5.21-4.24 9.46-9.46 9.46zm8.05-17.5A11.32 11.32 0 0 0 12.04.5C5.8.5.72 5.57.72 11.81c0 2 .52 3.95 1.51 5.67L.63 23.5l6.16-1.62a11.3 11.3 0 0 0 5.25 1.34h.01c6.24 0 11.32-5.08 11.32-11.32 0-3.03-1.18-5.87-3.32-8z"/></svg></a>
     <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Otevřít menu" aria-expanded="false" aria-controls="nav-links"><span class="bars" aria-hidden="true"></span></button>
   </div>
 </header>
@@ -714,7 +728,7 @@
       <div>
         <span class="tag" data-i18n="contact.tag">Spojte se s námi</span>
         <h2 data-i18n="contact.h2">Těšíme se na vás a&nbsp;váš bike.</h2>
-        <p class="sub" data-i18n="contact.sub">Chcete se na cokoliv zeptat? Zavolejte <a href="tel:777271896" onclick="gtag('event','call_click',{'position':'contact'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a>. Nechcete volat? Napište nám.</p>
+        <p class="sub" data-i18n="contact.sub">Chcete se na cokoliv zeptat? Zavolejte nebo napište na <a href="https://wa.me/420777271896" target="_blank" rel="noopener" onclick="gtag('event','whatsapp_click',{'position':'contact'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">WhatsApp</a> na <a href="tel:777271896" onclick="gtag('event','call_click',{'position':'contact'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a>. Nechcete volat? Napište nám.</p>
         <form id="contact-form" action="https://formspree.io/f/meqdanod" method="POST">
           <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
           <div class="form-row">
@@ -730,6 +744,7 @@
         <div class="info-block">
           <div class="row"><span class="k" data-i18n="info.address">Adresa</span><span class="v"><a href="https://www.google.com/maps/place/Velointest/@50.0235373,14.4171806,17z/data=!3m1!4b1!4m5!3m4!1s0x0:0xb9853d8c478b52fe!8m2!3d50.0235065!4d14.4171829" target="_blank" rel="noopener">Na Výspě 12, 147 00 Praha 4</a></span></div>
           <div class="row"><span class="k" data-i18n="info.phone">Telefon</span><span class="v"><a href="tel:777271896" onclick="gtag('event','call_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a></span></div>
+          <div class="row"><span class="k">WhatsApp</span><span class="v"><a class="wa-inline" href="https://wa.me/420777271896" target="_blank" rel="noopener" onclick="gtag('event','whatsapp_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.74-.86-2.01-.96-.27-.1-.47-.15-.66.15-.2.29-.76.95-.93 1.15-.17.2-.34.22-.63.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.04-.17-.3-.02-.46.13-.6.13-.13.3-.34.44-.51.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.51-.08-.15-.66-1.59-.9-2.18-.24-.57-.48-.5-.66-.5l-.56-.01c-.2 0-.51.07-.78.36-.27.29-1.02 1-1.02 2.43 0 1.44 1.05 2.83 1.2 3.02.15.2 2.06 3.15 5 4.42.7.3 1.24.48 1.67.62.7.22 1.34.19 1.84.12.56-.09 1.74-.71 1.98-1.4.24-.68.24-1.27.17-1.39-.07-.12-.27-.19-.56-.34zM12.05 21.5h-.01a9.46 9.46 0 0 1-4.82-1.32l-.35-.21-3.58.94.96-3.49-.22-.36a9.42 9.42 0 0 1-1.45-5.03c0-5.21 4.25-9.45 9.46-9.45 2.53 0 4.9.99 6.68 2.78a9.39 9.39 0 0 1 2.77 6.68c0 5.21-4.24 9.46-9.46 9.46zm8.05-17.5A11.32 11.32 0 0 0 12.04.5C5.8.5.72 5.57.72 11.81c0 2 .52 3.95 1.51 5.67L.63 23.5l6.16-1.62a11.3 11.3 0 0 0 5.25 1.34h.01c6.24 0 11.32-5.08 11.32-11.32 0-3.03-1.18-5.87-3.32-8z"/></svg>777 271 896</a></span></div>
           <div class="row"><span class="k" data-i18n="info.email">E-mail</span><span class="v"><a class="email" onclick="gtag('event','email_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"></a></span></div>
           <div class="row"><span class="k" data-i18n="info.weekdays">Po–Čt</span><span class="v">10:00 – 18:00</span></div>
           <div class="row"><span class="k" data-i18n="info.friday">Pátek</span><span class="v">10:00 – 16:00</span></div>
@@ -746,7 +761,7 @@
 <footer id="footer">
   <div class="wrap">
     <span data-i18n="footer.tagline">© velointest — tradiční pražský cykloservis</span>
-    <span>Na Výspě 12, Praha 4 · <a href="tel:777271896" onclick="gtag('event','call_click',{'position':'bottom'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a> · <a class="email" onclick="gtag('event','email_click',{'position':'bottom'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"></a> · <a href="https://www.facebook.com/velointest" target="_blank" rel="noopener">facebook</a></span>
+    <span>Na Výspě 12, Praha 4 · <a href="tel:777271896" onclick="gtag('event','call_click',{'position':'bottom'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a> · <a class="wa-inline" href="https://wa.me/420777271896" target="_blank" rel="noopener" onclick="gtag('event','whatsapp_click',{'position':'bottom'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.74-.86-2.01-.96-.27-.1-.47-.15-.66.15-.2.29-.76.95-.93 1.15-.17.2-.34.22-.63.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.04-.17-.3-.02-.46.13-.6.13-.13.3-.34.44-.51.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.51-.08-.15-.66-1.59-.9-2.18-.24-.57-.48-.5-.66-.5l-.56-.01c-.2 0-.51.07-.78.36-.27.29-1.02 1-1.02 2.43 0 1.44 1.05 2.83 1.2 3.02.15.2 2.06 3.15 5 4.42.7.3 1.24.48 1.67.62.7.22 1.34.19 1.84.12.56-.09 1.74-.71 1.98-1.4.24-.68.24-1.27.17-1.39-.07-.12-.27-.19-.56-.34zM12.05 21.5h-.01a9.46 9.46 0 0 1-4.82-1.32l-.35-.21-3.58.94.96-3.49-.22-.36a9.42 9.42 0 0 1-1.45-5.03c0-5.21 4.25-9.45 9.46-9.45 2.53 0 4.9.99 6.68 2.78a9.39 9.39 0 0 1 2.77 6.68c0 5.21-4.24 9.46-9.46 9.46zm8.05-17.5A11.32 11.32 0 0 0 12.04.5C5.8.5.72 5.57.72 11.81c0 2 .52 3.95 1.51 5.67L.63 23.5l6.16-1.62a11.3 11.3 0 0 0 5.25 1.34h.01c6.24 0 11.32-5.08 11.32-11.32 0-3.03-1.18-5.87-3.32-8z"/></svg>WhatsApp</a> · <a class="email" onclick="gtag('event','email_click',{'position':'bottom'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"></a> · <a href="https://www.facebook.com/velointest" target="_blank" rel="noopener">facebook</a></span>
   </div>
 </footer>
 
@@ -889,7 +904,8 @@
       // contact
       'contact.tag': 'Get in touch',
       'contact.h2': 'Looking forward to seeing you and&nbsp;your bike.',
-      'contact.sub': "Got a question? Call <a href=\"tel:777271896\" onclick=\"gtag('event','call_click',{'position':'contact'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})\">777 271 896</a>. Don't want to call? Drop us a line.",
+      'contact.sub': "Got a question? Call or message us on <a href=\"https://wa.me/420777271896\" target=\"_blank\" rel=\"noopener\" onclick=\"gtag('event','whatsapp_click',{'position':'contact'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})\">WhatsApp</a> at <a href=\"tel:777271896\" onclick=\"gtag('event','call_click',{'position':'contact'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})\">777 271 896</a>. Don't want to call? Drop us a line.",
+      'wa.aria': 'Message us on WhatsApp',
       'form.name': 'Name',
       'form.name.ph': 'Your name',
       'form.email': 'Email',
@@ -959,6 +975,9 @@
     document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
       if(!('csPh' in el.dataset)) el.dataset.csPh = el.getAttribute('placeholder') || '';
     });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function(el){
+      if(!('csAria' in el.dataset)) el.dataset.csAria = el.getAttribute('aria-label') || '';
+    });
   }
 
   function applyLang(lang){
@@ -974,6 +993,11 @@
       var key = el.getAttribute('data-i18n-ph');
       if(lang === 'cs') el.setAttribute('placeholder', el.dataset.csPh);
       else if(dict && dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function(el){
+      var key = el.getAttribute('data-i18n-aria');
+      if(lang === 'cs') el.setAttribute('aria-label', el.dataset.csAria);
+      else if(dict && dict[key] !== undefined) el.setAttribute('aria-label', dict[key]);
     });
     // years + opening hours (must run AFTER innerHTML swap, since data-since-year spans get recreated)
     applyYearsAndOpening(lang);
