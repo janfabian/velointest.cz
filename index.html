@@ -610,7 +610,7 @@
   </div>
   <div class="wrap" style="position:relative">
     <div class="stat-strip">
-      <div><b data-since-year="1992">34</b><span data-i18n="stats.years">let provozu</span></div>
+      <div><b data-since-year="1992" data-countup>34</b><span data-i18n="stats.years">let provozu</span></div>
       <div><b>1.</b><span data-i18n="stats.first">pražský specializovaný servis</span></div>
       <div class="stat-google">
         <span class="stat-google-txt"><b>★★★★★</b><span data-i18n="stats.google">hodnocení na Google</span></span>
@@ -1107,6 +1107,42 @@
       });
     });
     applyLang(initial);
+  })();
+
+  // Count-up: animate the years-in-business number from 1 to its value the
+  // first time it scrolls into view. Fast easeOutCubic so it catches the eye.
+  (function(){
+    var els = document.querySelectorAll('[data-countup]');
+    if(!els.length || !('IntersectionObserver' in window)) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce) return; // honour reduced-motion: leave the final number as-is
+
+    function animate(el){
+      var target = parseInt(el.textContent, 10);
+      if(isNaN(target) || target < 2) return;
+      var start = null, dur = 1100;
+      el.textContent = '1';
+      function frame(ts){
+        if(start === null) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);   // easeOutCubic — quick burst, settles on target
+        el.textContent = String(Math.max(1, Math.round(eased * target)));
+        if(p < 1) requestAnimationFrame(frame);
+        else el.textContent = String(target);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && !e.target.__counted){
+          e.target.__counted = true;
+          io.unobserve(e.target);
+          animate(e.target);
+        }
+      });
+    }, {threshold: 0.6});
+    els.forEach(function(el){ io.observe(el); });
   })();
 
   // Facebook posts — fetch ./static/fb-posts.json once, render, re-render on lang change.
