@@ -147,14 +147,9 @@
   @font-face{font-family:'IBM Plex Sans Condensed';font-style:normal;font-weight:700;font-display:swap;src:url('./static/fonts/ibm-plex-sans-condensed-latin-ext-700.woff2') format('woff2');unicode-range:U+0100-024F,U+0259,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF}
 </style>
 
-<script src="https://www.google.com/recaptcha/api.js?render=6LdRxQ8iAAAAAAUoDqQVsFmhEw8pwAbzX7ERkDsc"></script>
-<script>
-  grecaptcha.ready(function () {
-    grecaptcha.execute('6LdRxQ8iAAAAAAUoDqQVsFmhEw8pwAbzX7ERkDsc', { action: 'submit' }).then(function (token) {
-      document.getElementById('g-recaptcha-response').value = token;
-    });
-  });
-</script>
+<!-- reCAPTCHA v3 is loaded lazily on first contact-form interaction and a fresh
+     token is fetched at submit time — keeps ~1 MB off every initial page load.
+     See the contact-form script near the end of <body>. -->
 
 <!-- EmailJS — auto-reply to form submitters after Formspree confirms 200 -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -1217,6 +1212,36 @@
     var form = document.getElementById('contact-form');
     if(!form) return;
     var status = document.getElementById('my-form-status');
+
+    // reCAPTCHA v3 — loaded lazily so it doesn't cost ~1MB on every page view.
+    var RECAPTCHA_KEY = '6LdRxQ8iAAAAAAUoDqQVsFmhEw8pwAbzX7ERkDsc';
+    var recaptchaPromise = null;
+    function loadRecaptcha(){
+      if(recaptchaPromise) return recaptchaPromise;
+      recaptchaPromise = new Promise(function(resolve, reject){
+        var s = document.createElement('script');
+        s.src = 'https://www.google.com/recaptcha/api.js?render=' + RECAPTCHA_KEY;
+        s.async = true; s.defer = true;
+        s.onload = function(){
+          if(window.grecaptcha && grecaptcha.ready) grecaptcha.ready(function(){ resolve(window.grecaptcha); });
+          else reject(new Error('grecaptcha unavailable'));
+        };
+        s.onerror = function(){ reject(new Error('recaptcha failed to load')); };
+        document.head.appendChild(s);
+      });
+      return recaptchaPromise;
+    }
+    // Best-effort: resolve with a fresh token, or '' if reCAPTCHA can't load —
+    // the form must always submit, token or not, so a lead never gets blocked.
+    function recaptchaToken(){
+      return loadRecaptcha()
+        .then(function(g){ return g.execute(RECAPTCHA_KEY, { action: 'submit' }); })
+        .catch(function(){ return ''; });
+    }
+    // Warm up reCAPTCHA the moment the user starts interacting with the form,
+    // so the token is ready by the time they hit submit.
+    form.addEventListener('focusin', function(){ loadRecaptcha(); }, { once: true });
+
     form.addEventListener('submit', function(e){
       e.preventDefault();
       status.className = 'form-status';
@@ -1225,6 +1250,9 @@
       var msgs = lang === 'en'
         ? { ok: '✓ Your message has been sent. Thanks.', err: 'Sorry, there was a problem sending. Please email velointest@velointest.cz or call 777 271 896.' }
         : { ok: '✓ Vaše zpráva je úspěšně odeslaná. Děkujeme.', err: 'Omlouváme se, nastal problém při odesílání. Napište prosím na velointest@velointest.cz nebo zavolejte 777 271 896.' };
+      recaptchaToken().then(function(token){
+      var tokenField = document.getElementById('g-recaptcha-response');
+      if(tokenField) tokenField.value = token;
       var data = new FormData(form);
       var visitorName = (data.get('jmeno') || '').toString().trim();
       var visitorEmail = (data.get('email') || '').toString().trim();
@@ -1268,6 +1296,7 @@
           status.classList.add('err');
           status.textContent = msgs.err;
         });
+      });
     });
   })();
 </script>
