@@ -298,6 +298,9 @@
   .hero-figure{position:relative;border:1px solid #313945}
   .hero-figure img{width:100%;height:430px;object-fit:cover;filter:grayscale(.25) contrast(1.05)}
   .hero-figure .cap{position:absolute;left:0;bottom:0;right:0;display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:#cfd4da;padding:10px 14px;background:linear-gradient(transparent,rgba(0,0,0,.65))}
+  .top-firma{position:absolute;top:14px;right:14px;z-index:3;display:block;width:clamp(74px,8vw,92px);line-height:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.45));transition:transform .25s}
+  .top-firma:hover{transform:scale(1.05)}
+  .top-firma img{width:100%;height:auto;filter:none}
   .corner{position:absolute;width:14px;height:14px;border:1px solid var(--steel)}
   .corner.tl{top:-1px;left:-1px;border-right:0;border-bottom:0}
   .corner.tr{top:-1px;right:-1px;border-left:0;border-bottom:0}
@@ -414,7 +417,13 @@
   .fb-empty{font-family:var(--mono);font-size:13px;color:var(--muted);text-align:center;padding:24px 0}
 
   /* generic "see more elsewhere" link under section grids (Reviews, FB, …) */
-  .sec-more{margin-top:36px;text-align:center}
+  .ref-foot{margin-top:34px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .ref-more-link{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);padding:12px 22px;border:1px solid var(--line);transition:.2s;white-space:nowrap}
+  .ref-more-link:hover{border-color:var(--steel);background:var(--paper-2);color:var(--ink)}
+  .ref-firmy{display:inline-block;line-height:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .ref-firmy:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.12)}
+  .ref-firmy img{display:block;height:44px;width:auto;max-width:none}
+  .sec-more{margin-top:28px;text-align:center}
   .sec-more a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);padding:12px 22px;border:1px solid var(--line);display:inline-block;transition:.2s;white-space:nowrap}
   .sec-more a:hover{border-color:var(--steel);background:var(--paper-2);color:var(--ink)}
 
@@ -587,6 +596,7 @@
       <div class="hero-figure">
         <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
         <img src="./static/bike-work-1-r.jpg" alt="Mechanik servisuje horské kolo v dílně Velointest" fetchpriority="high">
+        <a class="top-firma" href="https://www.firmy.cz/detail/259222-velointest-praha.html" target="_blank" rel="noopener" aria-label="TOP firma 2025 na Firmy.cz" data-i18n-aria="hero.topfirma"><img src="./static/top-firma-2025.svg" alt="TOP firma 2025 — Firmy.cz" width="138" height="120"></a>
         <div class="cap"><span data-i18n="hero.cap">FIG.01 — SERVIS</span><span>Na Výspě 12 · Praha 4</span></div>
       </div>
     </div>
@@ -737,7 +747,10 @@
         <div class="who"><b>Vojtěch Mařík</b> · Google</div>
       </article>
     </div>
-    <div class="sec-more"><a href="https://www.google.com/maps/place/Velointest/@50.0235373,14.4171806,17z/data=!3m1!4b1!4m5!3m4!1s0x0:0xb9853d8c478b52fe!8m2!3d50.0235065!4d14.4171829" target="_blank" rel="noopener" data-i18n="ref.more">Více recenzí na Google Maps →</a></div>
+    <div class="ref-foot">
+      <a class="ref-firmy" href="https://www.firmy.cz/detail/259222-velointest-praha.html#hodnoceni" target="_blank" rel="noopener" aria-label="Hodnocení VELOINTEST na Firmy.cz"><img src="https://www.firmy.cz/img-stars/light-259222.svg" alt="Hodnocení VELOINTEST na Firmy.cz" width="249" height="56" loading="lazy"></a>
+      <a class="ref-more-link" href="https://www.google.com/maps/place/Velointest/@50.0235373,14.4171806,17z/data=!3m1!4b1!4m5!3m4!1s0x0:0xb9853d8c478b52fe!8m2!3d50.0235065!4d14.4171829" target="_blank" rel="noopener" data-i18n="ref.more">Více recenzí na Google Maps →</a>
+    </div>
   </div>
 </section>
 
@@ -890,6 +903,7 @@
       'hero.cta1': 'Our services →',
       'hero.cta2': 'Write us',
       'hero.cap': 'FIG.01 — WORKSHOP',
+      'hero.topfirma': 'TOP firma 2025 on Firmy.cz',
       // stats
       'stats.years': 'years in business',
       'stats.first': "Prague's 1st specialized service",
