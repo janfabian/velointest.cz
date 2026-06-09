@@ -417,7 +417,12 @@
   .fb-empty{font-family:var(--mono);font-size:13px;color:var(--muted);text-align:center;padding:24px 0}
 
   /* generic "see more elsewhere" link under section grids (Reviews, FB, …) */
-  .sec-more{margin-top:36px;text-align:center}
+  .ref-badge{margin-top:34px;display:flex;flex-direction:column;align-items:center;gap:10px}
+  .ref-badge .lbl{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .ref-badge a{display:inline-block;line-height:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .ref-badge a:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.12)}
+  .ref-badge img{display:block;height:46px;width:auto;max-width:none}
+  .sec-more{margin-top:28px;text-align:center}
   .sec-more a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);padding:12px 22px;border:1px solid var(--line);display:inline-block;transition:.2s;white-space:nowrap}
   .sec-more a:hover{border-color:var(--steel);background:var(--paper-2);color:var(--ink)}
 
@@ -741,6 +746,10 @@
         <div class="who"><b>Vojtěch Mařík</b> · Google</div>
       </article>
     </div>
+    <div class="ref-badge">
+      <span class="lbl" data-i18n="ref.firmy">Hodnocení na Firmy.cz</span>
+      <a href="https://www.firmy.cz/detail/259222-velointest-praha.html#hodnoceni" target="_blank" rel="noopener" aria-label="Hodnocení VELOINTEST na Firmy.cz"><img src="https://www.firmy.cz/img-stars/light-259222.svg" alt="Hodnocení VELOINTEST na Firmy.cz" width="249" height="56" loading="lazy"></a>
+    </div>
     <div class="sec-more"><a href="https://www.google.com/maps/place/Velointest/@50.0235373,14.4171806,17z/data=!3m1!4b1!4m5!3m4!1s0x0:0xb9853d8c478b52fe!8m2!3d50.0235065!4d14.4171829" target="_blank" rel="noopener" data-i18n="ref.more">Více recenzí na Google Maps →</a></div>
   </div>
 </section>
@@ -950,6 +959,7 @@
       'ref.2.body': "\"Great service and attitude. Third bike I've had serviced here and I've always been very satisfied.\"",
       'ref.3.body': '"Excellent bike service with no competition in the area. The right guy in the right place — exactly as it should be. Pricing and turnaround time both very fair."',
       'ref.more': 'More reviews on Google Maps →',
+      'ref.firmy': 'Rating on Firmy.cz',
       // facebook posts
       'fb.head': 'From&nbsp;Facebook',
       'fb.tag': "What's new",
