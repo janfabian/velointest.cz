@@ -296,7 +296,7 @@
   .btn-ghost{border-color:#3a424d;color:#fff}
   .btn-ghost:hover{border-color:var(--steel)}
   .hero-figure{position:relative;border:1px solid #313945}
-  .hero-figure img{width:100%;height:430px;object-fit:cover;filter:grayscale(.25) contrast(1.05)}
+  .hero-figure > img{width:100%;height:430px;object-fit:cover;filter:grayscale(.25) contrast(1.05)}
   .hero-figure .cap{position:absolute;left:0;bottom:0;right:0;display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:#cfd4da;padding:10px 14px;background:linear-gradient(transparent,rgba(0,0,0,.65))}
   .top-firma{position:absolute;top:14px;right:14px;z-index:3;display:block;width:clamp(74px,8vw,92px);line-height:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.45));transition:transform .25s}
   .top-firma:hover{transform:scale(1.05)}
@@ -504,7 +504,7 @@
   @media(max-width:900px){
     .wrap{padding:0 22px}
     .hero-inner,.about,.contact-grid{grid-template-columns:1fr;gap:36px}
-    .hero-figure img{height:300px}
+    .hero-figure > img{height:300px}
     .bikes,.svcs,.pkgs,.refs{grid-template-columns:1fr}
     .fb-posts{grid-template-columns:1fr}
     .fb-post.is-hero .ph{aspect-ratio:16/10}
