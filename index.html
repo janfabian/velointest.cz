@@ -298,6 +298,9 @@
   .hero-figure{position:relative;border:1px solid #313945}
   .hero-figure img{width:100%;height:430px;object-fit:cover;filter:grayscale(.25) contrast(1.05)}
   .hero-figure .cap{position:absolute;left:0;bottom:0;right:0;display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:#cfd4da;padding:10px 14px;background:linear-gradient(transparent,rgba(0,0,0,.65))}
+  .top-firma{position:absolute;top:14px;right:14px;z-index:3;display:block;width:clamp(74px,8vw,92px);line-height:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.45));transition:transform .25s}
+  .top-firma:hover{transform:scale(1.05)}
+  .top-firma img{width:100%;height:auto;filter:none}
   .corner{position:absolute;width:14px;height:14px;border:1px solid var(--steel)}
   .corner.tl{top:-1px;left:-1px;border-right:0;border-bottom:0}
   .corner.tr{top:-1px;right:-1px;border-left:0;border-bottom:0}
@@ -587,6 +590,7 @@
       <div class="hero-figure">
         <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
         <img src="./static/bike-work-1-r.jpg" alt="Mechanik servisuje horské kolo v dílně Velointest" fetchpriority="high">
+        <a class="top-firma" href="https://www.firmy.cz/detail/259222-velointest-praha.html" target="_blank" rel="noopener" aria-label="TOP firma 2025 na Firmy.cz" data-i18n-aria="hero.topfirma"><img src="./static/top-firma-2025.svg" alt="TOP firma 2025 — Firmy.cz" width="138" height="120"></a>
         <div class="cap"><span data-i18n="hero.cap">FIG.01 — SERVIS</span><span>Na Výspě 12 · Praha 4</span></div>
       </div>
     </div>
@@ -890,6 +894,7 @@
       'hero.cta1': 'Our services →',
       'hero.cta2': 'Write us',
       'hero.cap': 'FIG.01 — WORKSHOP',
+      'hero.topfirma': 'TOP firma 2025 on Firmy.cz',
       // stats
       'stats.years': 'years in business',
       'stats.first': "Prague's 1st specialized service",
