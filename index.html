@@ -296,6 +296,10 @@
   .stat-google{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
   .stat-google-txt{text-align:center}
   .stat-google-txt b{color:#F2A93B;letter-spacing:2px;text-shadow:0 1px 6px rgba(242,169,59,.25)}
+  a.stat-google-txt{cursor:pointer;text-decoration:none}
+  a.stat-google-txt b,a.stat-google-txt span{transition:color .2s,text-shadow .2s,transform .2s}
+  a.stat-google-txt:hover span{color:#cfd4da}
+  a.stat-google-txt:hover b{text-shadow:0 1px 11px rgba(242,169,59,.55)}
   .stat-firma{flex-shrink:0;display:block;line-height:0;width:clamp(48px,5vw,60px);transition:transform .25s}
   .stat-firma:hover{transform:scale(1.06)}
   .stat-firma img{width:100%;height:auto}
@@ -376,7 +380,7 @@
   .about .addr{font-family:var(--mono);font-size:13px;color:var(--ink);border-left:2px solid var(--steel);padding:6px 0 6px 16px;display:inline-block}
   .about .addr:hover{color:var(--steel)}
 
-  .ref-section{background:var(--paper-2)}
+  .ref-section{background:var(--paper-2);scroll-margin-top:84px}
   .refs{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
   .ref{background:#fff;border:1px solid var(--line);padding:28px;display:flex;flex-direction:column;gap:18px}
   .ref .stars{color:var(--signal);font-size:14px;letter-spacing:3px}
@@ -618,7 +622,7 @@
       <div><b data-since-year="1992" data-countup>34</b><span data-i18n="stats.years">let provozu</span></div>
       <div><b>1.</b><span data-i18n="stats.first">pražský specializovaný servis</span></div>
       <div class="stat-google">
-        <span class="stat-google-txt"><b>★★★★★</b><span data-i18n="stats.google">hodnocení na Google</span></span>
+        <a class="stat-google-txt" href="#testimonial"><b>★★★★★</b><span data-i18n="stats.google">hodnocení na Google</span></a>
         <a class="stat-firma" href="https://www.firmy.cz/detail/259222-velointest-praha.html" target="_blank" rel="noopener" aria-label="TOP firma 2025 na Firmy.cz" data-i18n-aria="hero.topfirma"><img src="./static/top-firma-2025.svg" alt="TOP firma 2025 — Firmy.cz" width="138" height="120"></a>
       </div>
     </div>
