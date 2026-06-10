@@ -185,6 +185,7 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
+  section[id]{scroll-margin-top:84px}
   body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
   img{display:block;max-width:100%}
   a{color:inherit;text-decoration:none}
@@ -1152,6 +1153,34 @@
       });
     }, {threshold: 0.6});
     els.forEach(function(el){ io.observe(el); });
+  })();
+
+  // Scroll to the right section even when tracking params are appended AFTER the
+  // hash, e.g. firmy.cz PPD links: /#contact?utm_source=…  The browser treats
+  // "contact?utm_source=…" as the fragment, so it never matches an element id.
+  (function(){
+    function targetEl(){
+      var h = location.hash;
+      if(!h || h.indexOf('?') === -1) return null;   // clean hashes already work natively
+      var id = h.slice(1).split('?')[0];
+      return id ? document.getElementById(id) : null;
+    }
+    function jump(smooth){
+      var el = targetEl();
+      if(!el) return;
+      var root = document.documentElement, prev = root.style.scrollBehavior;
+      if(!smooth) root.style.scrollBehavior = 'auto';   // land instantly on arrival, no full-page sweep
+      el.scrollIntoView({ block: 'start' });
+      if(!smooth) root.style.scrollBehavior = prev;
+    }
+    if(targetEl()){
+      // Land instantly once layout is up, then correct after the async FB-posts
+      // render (which sits above #contact and would otherwise shift the target).
+      var settle = function(){ jump(false); setTimeout(function(){ jump(false); }, 450); };
+      if(document.readyState === 'complete') settle();
+      else window.addEventListener('load', settle);
+    }
+    window.addEventListener('hashchange', function(){ jump(true); });  // smooth for in-page navigation
   })();
 
   // Facebook posts — fetch ./static/fb-posts.json once, render, re-render on lang change.
