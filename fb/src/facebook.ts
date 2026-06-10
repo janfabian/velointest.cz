@@ -112,7 +112,10 @@ export class FacebookPublisher {
           const reelId = await this.publishReel(video, post.text);
           return ok(reelId, `https://www.facebook.com/reel/${reelId}`);
         }
-        const fd = this.form({ description: post.text });
+        // video_state=PUBLISHED is required — without it the /videos upload can
+        // land as a draft (esp. when the Page auto-converts to a Reel), leaving
+        // the video invisible to the public while the feed post looks fine.
+        const fd = this.form({ description: post.text, video_state: "PUBLISHED" });
         appendFile(fd, "source", video);
         const res = await this.graph(`${this.pageId}/videos`, fd);
         return await ok(String(res.id));
