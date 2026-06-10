@@ -29,6 +29,8 @@ interface GraphPost {
   created_time?: string;
   permalink_url?: string;
   full_picture?: string;
+  status_type?: string;
+  attachments?: { data?: Array<{ media_type?: string }> };
 }
 
 interface OutPost {
@@ -37,6 +39,7 @@ interface OutPost {
   image: string | null;
   url: string;
   createdAt: string;
+  isVideo: boolean;
 }
 
 function parseArgs(argv: string[]): Args {
@@ -88,7 +91,7 @@ async function main(): Promise<void> {
   const url =
     `https://graph.facebook.com/${version}/${encodeURIComponent(pageId)}/posts?` +
     new URLSearchParams({
-      fields: "id,message,created_time,permalink_url,full_picture",
+      fields: "id,message,created_time,permalink_url,full_picture,status_type,attachments{media_type}",
       limit: String(args.limit),
       access_token: token,
     }).toString();
@@ -105,6 +108,7 @@ async function main(): Promise<void> {
     image: p.full_picture ?? null,
     url: p.permalink_url ?? `https://www.facebook.com/${p.id}`,
     createdAt: p.created_time ?? "",
+    isVideo: p.status_type === "added_video" || p.attachments?.data?.[0]?.media_type === "video",
   }));
 
   mkdirSync(dirname(args.out), { recursive: true });

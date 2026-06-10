@@ -411,6 +411,14 @@
   .fb-post.is-mini p{font-size:13.5px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .fb-post.is-mini .more{padding-top:10px;border-top:1px solid var(--line);align-self:stretch}
 
+  /* video posts: play-button overlay on the thumbnail (click opens the post on Facebook) */
+  .fb-post .ph.is-video{position:relative}
+  .fb-post .ph.is-video .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;background:rgba(19,22,27,.58);display:flex;align-items:center;justify-content:center;pointer-events:none;transition:background .25s}
+  .fb-post .ph.is-video .play::before{content:"";margin-left:4px;border-style:solid;border-width:11px 0 11px 19px;border-color:transparent transparent transparent #fff}
+  .fb-post .ph.is-video:hover .play{background:rgba(19,22,27,.78)}
+  .fb-post p a{color:var(--steel);text-decoration:underline;text-underline-offset:2px;word-break:break-word}
+  .fb-post p a:hover{color:var(--ink)}
+
   .fb-empty{font-family:var(--mono);font-size:13px;color:var(--muted);text-align:center;padding:24px 0}
 
   /* generic "see more elsewhere" link under section grids (Reviews, FB, …) */
@@ -1152,6 +1160,14 @@
         return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
       });
     }
+    // Turn already-escaped text into safe HTML: linkify URLs + preserve line breaks.
+    function richText(raw){
+      var html = escapeHtml(raw);
+      html = html.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)\]])/g, function(u){
+        return '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>';
+      });
+      return html.replace(/\n/g, '<br>');
+    }
     function render(lang){
       if(!Array.isArray(posts) || posts.length === 0){ section.hidden = true; return; }
       section.hidden = false;
@@ -1167,16 +1183,19 @@
         var date = d && !isNaN(d.getTime()) ? fmt.format(d) : '';
         var raw = String(p.text || '');
         var text = raw.length > maxChars ? raw.slice(0, maxChars).trimEnd() + '…' : raw;
-        var img = p.image
-          ? '<a href="' + escapeHtml(p.url) + '" target="_blank" rel="noopener" class="ph"><img src="' + escapeHtml(p.image) + '" alt="" loading="lazy"></a>'
-          : '';
+        var media = '';
+        if(p.image){
+          var inner = '<img src="' + escapeHtml(p.image) + '" alt="" loading="lazy">';
+          if(p.isVideo) inner += '<span class="play" aria-hidden="true"></span>';
+          media = '<a href="' + escapeHtml(p.url) + '" target="_blank" rel="noopener" class="ph' + (p.isVideo ? ' is-video' : '') + '">' + inner + '</a>';
+        }
         var meta = date
           ? '<div class="meta">' + escapeHtml(date) + (isHero ? '<span class="badge">• ' + escapeHtml(latestBadge) + '</span>' : '') + '</div>'
           : '';
-        return '<article class="fb-post ' + (isHero ? 'is-hero' : 'is-mini') + '">' + img
+        return '<article class="fb-post ' + (isHero ? 'is-hero' : 'is-mini') + '">' + media
           + '<div class="bd">'
           +   meta
-          +   '<p>' + escapeHtml(text) + '</p>'
+          +   '<p>' + richText(text) + '</p>'
           +   '<a class="more" href="' + escapeHtml(p.url) + '" target="_blank" rel="noopener">' + moreLabel + '</a>'
           + '</div>'
           + '</article>';
