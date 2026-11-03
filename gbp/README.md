@@ -73,6 +73,16 @@ CTA types: `LEARN_MORE`, `BOOK`, `ORDER`, `SHOP`, `SIGN_UP`, `CALL`. All except 
 
 Exit code 0 on success, non-zero on failure. `--json` prints a single JSON object.
 
+## Opening hours
+
+```bash
+bun run hours                                                         # show what Google has now
+bun run hours --set "MON,WED 11:00-17:00; TUE,THU 11:00-18:00" --dry-run
+bun run hours --set "MON,WED 11:00-17:00; TUE,THU 11:00-18:00"        # apply
+```
+
+`--set` replaces the whole week: any day you leave out shows as **closed** on Google. Czech day codes work too (`PO UT ST CT PA SO NE`). For a lunch break, list the same day twice: `"MON 09:00-12:00; MON 13:00-17:00"`. Uses the Business Information API (`PATCH locations/{id}?updateMask=regularHours`). Keep it in sync with the hours on `index.html` (contact block, JSON-LD and the `HOURS` table in the opening-status script).
+
 ## Files
 
 ```
@@ -81,7 +91,8 @@ gbp/
 ├── tsconfig.json
 ├── .env.example
 ├── src/
-│   ├── publish.ts   ← CLI entrypoint
+│   ├── publish.ts   ← CLI entrypoint (posts)
+│   ├── hours.ts     ← CLI: show / set regular opening hours
 │   └── gbp.ts       ← My Business v4 localPosts publisher + OAuth token refresh
 └── scripts/
     └── auth.ts      ← OAuth flow + account/location discovery → writes .env

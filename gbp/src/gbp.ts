@@ -49,6 +49,33 @@ export interface GbpConfig {
 
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
 const MYBUSINESS_V4 = "https://mybusiness.googleapis.com/v4";
+const BUSINESS_INFO_V1 = "https://mybusinessbusinessinformation.googleapis.com/v1";
+
+export type DayOfWeek = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+
+/** One opening interval on a single day, times as "HH:MM". */
+export interface HoursPeriod {
+  day: DayOfWeek;
+  open: string;
+  close: string;
+}
+
+interface ApiTime { hours?: number; minutes?: number }
+interface ApiPeriod { openDay: DayOfWeek; openTime?: ApiTime; closeDay: DayOfWeek; closeTime?: ApiTime }
+
+const fmtTime = (t?: ApiTime): string =>
+  `${String(t?.hours ?? 0).padStart(2, "0")}:${String(t?.minutes ?? 0).padStart(2, "0")}`;
+const parseTime = (s: string): ApiTime => {
+  const [h, m] = s.split(":").map(Number);
+  return m ? { hours: h, minutes: m } : { hours: h };
+};
+const fromApiPeriod = (p: ApiPeriod): HoursPeriod => ({ day: p.openDay, open: fmtTime(p.openTime), close: fmtTime(p.closeTime) });
+const toApiPeriod = (p: HoursPeriod): ApiPeriod => ({
+  openDay: p.day,
+  openTime: parseTime(p.open),
+  closeDay: p.day,
+  closeTime: parseTime(p.close),
+});
 
 interface GoogleApiError {
   error?: { code?: number; message?: string; status?: string };
@@ -152,6 +179,52 @@ export class GbpPublisher {
       const { errorCode, message } = mapGoogleError(err);
       return { ok: false, error: message, errorCode };
     }
+  }
+
+  /** Read the location's regular (weekly) opening hours. */
+  async getHours(): Promise<{ ok: true; periods: HoursPeriod[] } | { ok: false; error: string; errorCode: ErrorCode }> {
+    try {
+      const json = await this.infoApi(`locations/${this.cfg.locationId}?readMask=regularHours`, "GET");
+      const rh = json.regularHours as { periods?: ApiPeriod[] } | undefined;
+      return { ok: true, periods: (rh?.periods || []).map(fromApiPeriod) };
+    } catch (err) {
+      const { errorCode, message } = mapGoogleError(err);
+      return { ok: false, error: message, errorCode };
+    }
+  }
+
+  /** Replace the location's regular opening hours. Days without a period show as closed. */
+  async setHours(periods: HoursPeriod[]): Promise<{ ok: true; periods: HoursPeriod[] } | { ok: false; error: string; errorCode: ErrorCode }> {
+    try {
+      const json = await this.infoApi(`locations/${this.cfg.locationId}?updateMask=regularHours`, "PATCH", {
+        regularHours: { periods: periods.map(toApiPeriod) },
+      });
+      const rh = json.regularHours as { periods?: ApiPeriod[] } | undefined;
+      return { ok: true, periods: (rh?.periods || []).map(fromApiPeriod) };
+    } catch (err) {
+      const { errorCode, message } = mapGoogleError(err);
+      return { ok: false, error: message, errorCode };
+    }
+  }
+
+  private async infoApi(path: string, method: string, body?: unknown): Promise<Record<string, unknown>> {
+    const token = await this.token();
+    const res = await fetch(`${BUSINESS_INFO_V1}/${path}`, {
+      method,
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+    const json = (await res.json().catch(() => ({}))) as Record<string, unknown> & GoogleApiError;
+    if (!res.ok) {
+      const e = new Error(json.error?.message || `Business Information API HTTP ${res.status}`) as Error & {
+        httpStatus?: number;
+        status?: string;
+      };
+      e.httpStatus = res.status;
+      e.status = json.error?.status;
+      throw e;
+    }
+    return json;
   }
 
   private async api(path: string, method: string, body?: unknown): Promise<Record<string, unknown>> {

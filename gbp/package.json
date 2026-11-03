@@ -6,7 +6,8 @@
   "scripts": {
     "publish": "bun run src/publish.ts",
     "auth": "bun run scripts/auth.ts",
-    "whoami": "bun run scripts/auth.ts --whoami"
+    "whoami": "bun run scripts/auth.ts --whoami",
+    "hours": "bun run src/hours.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
