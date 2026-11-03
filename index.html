@@ -70,15 +70,15 @@
   "openingHoursSpecification": [
     {
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday"],
-      "opens": "10:00",
-      "closes": "18:00"
+      "dayOfWeek": ["Monday","Wednesday"],
+      "opens": "11:00",
+      "closes": "17:00"
     },
     {
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": "Friday",
-      "opens": "10:00",
-      "closes": "16:00"
+      "dayOfWeek": ["Tuesday","Thursday"],
+      "opens": "11:00",
+      "closes": "18:00"
     }
   ],
   "sameAs": [
@@ -824,8 +824,9 @@
           <div class="row"><span class="k" data-i18n="info.phone">Telefon</span><span class="v"><a href="tel:777271896" onclick="gtag('event','call_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})">777 271 896</a></span></div>
           <div class="row"><span class="k">WhatsApp</span><span class="v"><a class="wa-inline" href="https://wa.me/420777271896" target="_blank" rel="noopener" onclick="gtag('event','whatsapp_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.74-.86-2.01-.96-.27-.1-.47-.15-.66.15-.2.29-.76.95-.93 1.15-.17.2-.34.22-.63.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.04-.17-.3-.02-.46.13-.6.13-.13.3-.34.44-.51.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.51-.08-.15-.66-1.59-.9-2.18-.24-.57-.48-.5-.66-.5l-.56-.01c-.2 0-.51.07-.78.36-.27.29-1.02 1-1.02 2.43 0 1.44 1.05 2.83 1.2 3.02.15.2 2.06 3.15 5 4.42.7.3 1.24.48 1.67.62.7.22 1.34.19 1.84.12.56-.09 1.74-.71 1.98-1.4.24-.68.24-1.27.17-1.39-.07-.12-.27-.19-.56-.34zM12.05 21.5h-.01a9.46 9.46 0 0 1-4.82-1.32l-.35-.21-3.58.94.96-3.49-.22-.36a9.42 9.42 0 0 1-1.45-5.03c0-5.21 4.25-9.45 9.46-9.45 2.53 0 4.9.99 6.68 2.78a9.39 9.39 0 0 1 2.77 6.68c0 5.21-4.24 9.46-9.46 9.46zm8.05-17.5A11.32 11.32 0 0 0 12.04.5C5.8.5.72 5.57.72 11.81c0 2 .52 3.95 1.51 5.67L.63 23.5l6.16-1.62a11.3 11.3 0 0 0 5.25 1.34h.01c6.24 0 11.32-5.08 11.32-11.32 0-3.03-1.18-5.87-3.32-8z"/></svg>777 271 896</a></span></div>
           <div class="row"><span class="k" data-i18n="info.email">E-mail</span><span class="v"><a class="email" onclick="gtag('event','email_click',{'position':'info'});gtag('event','conversion',{'send_to':'AW-858687502/TpQdCMXWs-ADEI6QupkD'})"></a></span></div>
-          <div class="row"><span class="k" data-i18n="info.weekdays">Po–Čt</span><span class="v">10:00 – 18:00</span></div>
-          <div class="row"><span class="k" data-i18n="info.friday">Pátek</span><span class="v">10:00 – 16:00</span></div>
+          <div class="row"><span class="k" data-i18n="info.monwed">Po, St</span><span class="v">11:00 – 17:00</span></div>
+          <div class="row"><span class="k" data-i18n="info.tuethu">Út, Čt</span><span class="v">11:00 – 18:00</span></div>
+          <div class="row"><span class="k" data-i18n="info.friday">Pátek</span><span class="v" data-i18n="info.closed">zavřeno</span></div>
           <div class="row"><span class="k">Facebook</span><span class="v"><a href="https://www.facebook.com/velointest" target="_blank" rel="noopener">/velointest</a></span></div>
         </div>
         <div class="map" id="map">
@@ -1003,8 +1004,10 @@
       'info.address': 'Address',
       'info.phone': 'Phone',
       'info.email': 'Email',
-      'info.weekdays': 'Mon–Thu',
+      'info.monwed': 'Mon, Wed',
+      'info.tuethu': 'Tue, Thu',
       'info.friday': 'Friday',
+      'info.closed': 'closed',
       // footer
       'footer.tagline': '© velointest — traditional Prague bike service'
     }
@@ -1019,27 +1022,31 @@
     var now = new Date();
     var d = now.getDay();                                  // 0=Sun..6=Sat
     var minutes = now.getHours() * 60 + now.getMinutes();
-    var OPEN = 10 * 60;
-    var todayClose = (d === 5) ? 16 * 60 : 18 * 60;        // Fri closes 16, Mon-Thu close 18
-    var isWeekday = d >= 1 && d <= 5;
-    var isOpen = isWeekday && minutes >= OPEN && minutes < todayClose;
+    // Winter hours: Mon+Wed 11–17, Tue+Thu 11–18, Fri–Sun closed
+    var HOURS = { 1: [11, 17], 2: [11, 18], 3: [11, 17], 4: [11, 18] };
+    var today = HOURS[d];
+    var isOpen = !!today && minutes >= today[0] * 60 && minutes < today[1] * 60;
 
     var text;
     if(isOpen){
-      text = lang === 'en'
-        ? (d === 5 ? 'Open today 10:00 – 16:00' : 'Open today 10:00 – 18:00')
-        : (d === 5 ? 'Dnes máme otevřeno 10:00 – 16:00' : 'Dnes máme otevřeno 10:00 – 18:00');
+      var span = today[0] + ':00 – ' + today[1] + ':00';
+      text = lang === 'en' ? 'Open today ' + span : 'Dnes máme otevřeno ' + span;
     } else {
-      // Closed — figure out when the shop opens next (today / tomorrow / Monday)
+      // Closed — figure out when the shop opens next
+      var DAYS_CS = ['v neděli','v pondělí','v úterý','ve středu','ve čtvrtek','v pátek','v sobotu'];
+      var DAYS_EN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       var nextLabel;
-      if(isWeekday && minutes < OPEN){
-        nextLabel = lang === 'en' ? 'today at 10:00' : 'dnes v 10:00';
-      } else if(d === 6){              // Saturday → Monday
-        nextLabel = lang === 'en' ? 'Monday at 10:00' : 'v pondělí v 10:00';
-      } else if(d === 5){              // Friday evening → Monday
-        nextLabel = lang === 'en' ? 'Monday at 10:00' : 'v pondělí v 10:00';
-      } else {                          // Sun OR Mon-Thu evening → tomorrow
-        nextLabel = lang === 'en' ? 'tomorrow at 10:00' : 'zítra v 10:00';
+      if(today && minutes < today[0] * 60){
+        nextLabel = lang === 'en' ? 'today at ' + today[0] + ':00' : 'dnes v ' + today[0] + ':00';
+      } else {
+        for(var i = 1; i <= 7; i++){
+          var nd = (d + i) % 7, h = HOURS[nd];
+          if(!h) continue;
+          var at = h[0] + ':00';
+          if(i === 1) nextLabel = lang === 'en' ? 'tomorrow at ' + at : 'zítra v ' + at;
+          else nextLabel = lang === 'en' ? DAYS_EN[nd] + ' at ' + at : DAYS_CS[nd] + ' v ' + at;
+          break;
+        }
       }
       text = lang === 'en'
         ? 'Closed — opens ' + nextLabel
