@@ -73,6 +73,17 @@ CTA types: `LEARN_MORE`, `BOOK`, `ORDER`, `SHOP`, `SIGN_UP`, `CALL`. All except 
 
 Exit code 0 on success, non-zero on failure. `--json` prints a single JSON object.
 
+## Managing posts
+
+```bash
+bun run admin list [--limit N]           # recent posts: id, date, state (LIVE/PROCESSING/REJECTED), snippet
+bun run admin get <post-id>              # full text, image, button, link
+bun run admin edit <post-id> --text "…"  # replace the text (image/button untouched), verified by read-back
+bun run admin delete <post-id> --yes     # delete permanently
+```
+
+To post the same thing to Facebook and Google at once, use `../social` (`bun run post`).
+
 ## Opening hours
 
 ```bash
@@ -93,6 +104,7 @@ gbp/
 ├── src/
 │   ├── publish.ts   ← CLI entrypoint (posts)
 │   ├── hours.ts     ← CLI: show / set regular opening hours
+│   ├── admin.ts     ← CLI: list / get / edit / delete posts
 │   └── gbp.ts       ← My Business v4 localPosts publisher + OAuth token refresh
 └── scripts/
     └── auth.ts      ← OAuth flow + account/location discovery → writes .env

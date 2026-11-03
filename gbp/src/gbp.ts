@@ -33,9 +33,52 @@ export interface PublishResult {
   name?: string;
   /** "searchUrl" Google returns to view the post, when present. */
   url?: string;
+  /** LIVE / PROCESSING / REJECTED as reported by Google. */
+  state?: string;
   error?: string;
   errorCode?: ErrorCode;
   durationMs: number;
+}
+
+/** A local post as read back from Google. */
+export interface LocalPost {
+  /** Full resource name: accounts/../locations/../localPosts/ID */
+  name: string;
+  /** Bare post id (last path segment). */
+  id: string;
+  summary: string;
+  state?: string;
+  createTime?: string;
+  updateTime?: string;
+  url?: string;
+  imageUrl?: string;
+  cta?: { type: string; url?: string };
+}
+
+interface ApiLocalPost {
+  name?: string;
+  summary?: string;
+  state?: string;
+  createTime?: string;
+  updateTime?: string;
+  searchUrl?: string;
+  media?: Array<{ googleUrl?: string; sourceUrl?: string }>;
+  callToAction?: { actionType?: string; url?: string };
+}
+
+function toLocalPost(p: ApiLocalPost): LocalPost {
+  const name = p.name || "";
+  return {
+    name,
+    id: name.split("/").pop() || "",
+    summary: p.summary || "",
+    state: p.state,
+    createTime: p.createTime,
+    updateTime: p.updateTime,
+    url: p.searchUrl,
+    imageUrl: p.media?.[0]?.googleUrl || p.media?.[0]?.sourceUrl,
+    cta: p.callToAction?.actionType ? { type: p.callToAction.actionType, url: p.callToAction.url } : undefined,
+  };
 }
 
 export interface GbpConfig {
@@ -145,19 +188,76 @@ export class GbpPublisher {
       post.media = [{ mediaFormat: "PHOTO", sourceUrl: input.imageUrl }];
     }
 
-    const path = `accounts/${this.cfg.accountId}/locations/${this.cfg.locationId}/localPosts`;
+    const done = (p: LocalPost): PublishResult => ({
+      ok: true,
+      name: p.name,
+      url: p.url,
+      state: p.state,
+      durationMs: Date.now() - start,
+    });
+    const existing = await this.findJustCreated(summary);
+    if (existing) return done(existing);
     try {
-      const res = await this.api(path, "POST", post);
-      return {
-        ok: true,
-        name: typeof res.name === "string" ? res.name : undefined,
-        url: typeof res.searchUrl === "string" ? res.searchUrl : undefined,
-        durationMs: Date.now() - start,
-      };
+      const res = await this.api(this.postsPath(), "POST", post);
+      return done(toLocalPost(res as ApiLocalPost));
     } catch (err) {
+      // Same idea as fb/: the create may have committed before the error.
+      const recovered = await this.findJustCreated(summary);
+      if (recovered) return done(recovered);
       const { errorCode, message } = mapGoogleError(err);
       return fail(errorCode, message);
     }
+  }
+
+  private postsPath(): string {
+    return `accounts/${this.cfg.accountId}/locations/${this.cfg.locationId}/localPosts`;
+  }
+
+  /** Accept a full "accounts/../localPosts/ID" name or the bare post id. */
+  private postName(idOrName: string): string {
+    const s = idOrName.trim();
+    if (s.startsWith("accounts/")) return s;
+    if (!/^[0-9A-Za-z_-]+$/.test(s)) throw Object.assign(new Error(`not a post id: ${idOrName}`), { httpStatus: 400 });
+    return `${this.postsPath()}/${s}`;
+  }
+
+  /** Most recent local posts on the location (newest first). */
+  async listPosts(limit = 5): Promise<LocalPost[]> {
+    const res = await this.api(`${this.postsPath()}?pageSize=${Math.min(Math.max(limit, 1), 100)}`, "GET");
+    return ((res.localPosts as ApiLocalPost[] | undefined) || []).map(toLocalPost);
+  }
+
+  async getPost(idOrName: string): Promise<LocalPost> {
+    return toLocalPost((await this.api(this.postName(idOrName), "GET")) as ApiLocalPost);
+  }
+
+  /** Replace a post's text. Image / button are left as they are. */
+  async editPost(idOrName: string, summary: string): Promise<LocalPost> {
+    const text = summary.trim();
+    if (!text) throw Object.assign(new Error("post text is required"), { httpStatus: 400 });
+    if (text.length > 1500) throw Object.assign(new Error(`text too long: ${text.length} > 1500 chars`), { httpStatus: 400 });
+    const res = await this.api(`${this.postName(idOrName)}?updateMask=summary`, "PATCH", { summary: text });
+    return toLocalPost(res as ApiLocalPost);
+  }
+
+  async deletePost(idOrName: string): Promise<void> {
+    await this.api(this.postName(idOrName), "DELETE");
+  }
+
+  /**
+   * Duplicate guard: a post with exactly this text created in the last few
+   * minutes (e.g. by a previous run that errored on the response path).
+   */
+  async findJustCreated(summary: string, withinMs = 5 * 60 * 1000): Promise<LocalPost | null> {
+    try {
+      const cutoff = Date.now() - withinMs;
+      for (const p of await this.listPosts(5)) {
+        if (p.summary === summary.trim() && p.createTime && Date.parse(p.createTime) >= cutoff) return p;
+      }
+    } catch {
+      /* best-effort only */
+    }
+    return null;
   }
 
   /** Read the location's title — a cheap liveness/permission probe. */

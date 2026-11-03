@@ -1,0 +1,14 @@
+{
+  "name": "velointest-social",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "post": "bun run post.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5"
+  },
+  "dependencies": {}
+}

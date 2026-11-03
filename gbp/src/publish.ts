@@ -146,6 +146,7 @@ async function main(): Promise<void> {
     console.log(`✓ published in ${result.durationMs}ms`);
     if (result.name) console.log(`  name: ${result.name}`);
     if (result.url) console.log(`  url:  ${result.url}`);
+    if (result.state) console.log(`  state: ${result.state}`);
   } else {
     console.error(`✗ failed in ${result.durationMs}ms`);
     console.error(`  code: ${result.errorCode}`);
