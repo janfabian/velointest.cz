@@ -278,6 +278,7 @@
   .hero{position:relative;background:var(--ink);color:#fff;overflow:hidden}
   .hero .grid-bg{position:absolute;inset:0}
   .hero-inner{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center;padding:78px 0 88px}
+  .site-notice{position:relative;z-index:1;background:var(--signal);color:#fff;text-align:center;font-weight:700;font-size:21px;letter-spacing:.02em;padding:14px 0}
   .hero .eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:26px}
   .hero .eyebrow .ln{height:1px;width:46px;background:var(--steel)}
   .hero h1{font-family:var(--cond);font-weight:700;font-size:clamp(34px,4.1vw,58px);line-height:1.0;letter-spacing:-.01em;text-transform:uppercase}
@@ -599,6 +600,8 @@
 <!-- HERO -->
 <section class="hero" id="home" style="padding:0">
   <div class="grid-bg"></div>
+  <!-- Temporary notice: removed automatically by JS after data-until (visitor's local date) -->
+  <div class="site-notice" data-until="2026-11-17" role="status"><div class="wrap" data-i18n="notice.text">Zavřeno 16. a 17. 11. 2026</div></div>
   <div class="wrap">
     <div class="hero-inner">
       <div>
@@ -918,6 +921,7 @@
       'nav.about': 'About',
       'nav.contact': 'Contact',
       // hero
+      'notice.text': 'Closed 16 and 17 November 2026',
       'hero.eyebrow': "Hello, we're velointest.",
       'hero.h1': 'Traditional Prague<br>bike service &amp;<br><em>bikeshop</em><br>in Hodkovičky.',
       'hero.lead': "We've been servicing all types of bikes for <span data-since-year=\"1992\">34</span> years. Small shop, big know-how — from weekend riders to seasoned pros.",
@@ -1024,7 +1028,16 @@
     var minutes = now.getHours() * 60 + now.getMinutes();
     // Winter hours: Mon+Wed 11–17, Tue+Thu 11–18, Fri–Sun closed
     var HOURS = { 1: [11, 17], 2: [11, 18], 3: [11, 17], 4: [11, 18] };
-    var today = HOURS[d];
+    // One-off closures (YYYY-MM-DD, local date)
+    var CLOSED = { '2026-11-16': 1, '2026-11-17': 1 };
+    function hoursOn(date){
+      var key = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+      return CLOSED[key] ? null : HOURS[date.getDay()];
+    }
+    document.querySelectorAll('[data-until]').forEach(function(n){
+      if(now > new Date(n.getAttribute('data-until') + 'T23:59:59')) n.remove();
+    });
+    var today = hoursOn(now);
     var isOpen = !!today && minutes >= today[0] * 60 && minutes < today[1] * 60;
 
     var text;
@@ -1040,7 +1053,7 @@
         nextLabel = lang === 'en' ? 'today at ' + today[0] + ':00' : 'dnes v ' + today[0] + ':00';
       } else {
         for(var i = 1; i <= 7; i++){
-          var nd = (d + i) % 7, h = HOURS[nd];
+          var nd = (d + i) % 7, h = hoursOn(new Date(now.getFullYear(), now.getMonth(), now.getDate() + i));
           if(!h) continue;
           var at = h[0] + ':00';
           if(i === 1) nextLabel = lang === 'en' ? 'tomorrow at ' + at : 'zítra v ' + at;
